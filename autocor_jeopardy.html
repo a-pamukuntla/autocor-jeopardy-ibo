@@ -152,6 +152,9 @@
         }
     }
 
+    let finalJeopardyQuestion = '';
+    let finalJeopardyAnswer = '';
+
     function applyBranding(b) {
         const logo = document.getElementById('cisco-logo');
         const title = document.querySelector('.header-left h1');
@@ -166,6 +169,8 @@
         if (finalBtn) {
             finalBtn.style.display = b.showFinalJeopardy === false ? 'none' : 'block';
         }
+        if (b.finalQuestion) finalJeopardyQuestion = b.finalQuestion;
+        if (b.finalAnswer) finalJeopardyAnswer = b.finalAnswer;
     }
 
     async function loadConfig() {
@@ -199,7 +204,12 @@
             await loadConfig();
             Object.keys(TEAMS).forEach(id => { scores[id] = 0; });
             const res = await fetch(`./data/${board}.json`);
-            categories = await res.json();
+            const boardData = await res.json();
+            if (boardData.finalJeopardy) {
+                if (!finalJeopardyQuestion) finalJeopardyQuestion = boardData.finalJeopardy.q || '';
+                if (!finalJeopardyAnswer) finalJeopardyAnswer = boardData.finalJeopardy.a || '';
+            }
+            categories = Array.isArray(boardData) ? boardData : boardData.categories || boardData;
             renderBoard();
             renderScoreboard();
             connectMQTT();
@@ -514,9 +524,11 @@
     }
 
     function triggerFinal() {
-        currentPoints = 100; // Default increment for final adjustments
-        document.getElementById('question-text').innerText = "FINAL JEOPARDY: This new 350-901 exam replaces DEVCOR and introduces a focus on AI agents and the Model Context Protocol.";
-        document.getElementById('actual-answer').innerText = "What is AUTOCOR?";
+        currentPoints = 100;
+        const question = finalJeopardyQuestion || "FINAL JEOPARDY: No question configured. Set one in the setup page.";
+        const answer = finalJeopardyAnswer || "No answer configured";
+        document.getElementById('question-text').innerText = question;
+        document.getElementById('actual-answer').innerText = answer;
         document.getElementById('modal').style.display = 'flex';
         document.getElementById('answer-area').style.display = 'none';
         document.getElementById('reveal-btn').style.display = 'inline-block';

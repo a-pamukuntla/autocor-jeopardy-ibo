@@ -251,13 +251,23 @@
             </div>
 
             <div class="branding-section">
-                <h3>Game Options</h3>
+                <h3>Final Jeopardy</h3>
                 <div class="branding-fields">
-                    <div style="display:flex; align-items:center; gap:15px;">
+                    <div style="display:flex; align-items:center; gap:15px; margin-bottom:15px;">
                         <label style="font-size:1rem; color:#ccc; cursor:pointer; display:flex; align-items:center; gap:10px;">
-                            <input type="checkbox" id="toggle-final" onchange="branding.showFinalJeopardy = this.checked" style="width:20px;height:20px;cursor:pointer;">
-                            Show Final Jeopardy button
+                            <input type="checkbox" id="toggle-final" onchange="toggleFinalJeopardy(this.checked)" style="width:20px;height:20px;cursor:pointer;">
+                            Enable Final Jeopardy
                         </label>
+                    </div>
+                    <div id="final-jeopardy-fields" style="display:none;">
+                        <div class="field-group" style="margin-bottom:15px;">
+                            <label>Final Jeopardy Question</label>
+                            <textarea id="final-question" rows="3" oninput="branding.finalQuestion = this.value" placeholder="Enter the Final Jeopardy question..." style="resize:vertical;font-family:inherit;"></textarea>
+                        </div>
+                        <div class="field-group">
+                            <label>Final Jeopardy Answer</label>
+                            <input type="text" id="final-answer" oninput="branding.finalAnswer = this.value" placeholder="What is...?">
+                        </div>
                     </div>
                 </div>
             </div>
@@ -304,7 +314,7 @@
 
         let mqttClient = null;
         let teams = [];
-        let branding = { title: "What's The Question?", logo: '', showFinalJeopardy: true };
+        let branding = { title: "What's The Question?", logo: '', showFinalJeopardy: true, finalQuestion: '', finalAnswer: '' };
         let editingTeamIndex = null;
 
         // --- Tabs ---
@@ -404,9 +414,18 @@
         function renderBrandingForm() {
             document.getElementById('brand-title').value = branding.title || '';
             document.getElementById('brand-logo-path').value = branding.logo && !branding.logo.startsWith('data:') ? branding.logo : '';
-            document.getElementById('toggle-final').checked = branding.showFinalJeopardy !== false;
+            const finalEnabled = branding.showFinalJeopardy !== false;
+            document.getElementById('toggle-final').checked = finalEnabled;
+            document.getElementById('final-jeopardy-fields').style.display = finalEnabled ? 'block' : 'none';
+            document.getElementById('final-question').value = branding.finalQuestion || '';
+            document.getElementById('final-answer').value = branding.finalAnswer || '';
             updateBannerPreview();
             updateLogoThumb();
+        }
+
+        function toggleFinalJeopardy(checked) {
+            branding.showFinalJeopardy = checked;
+            document.getElementById('final-jeopardy-fields').style.display = checked ? 'block' : 'none';
         }
 
         function updateBranding() {
@@ -619,7 +638,9 @@
                 branding: {
                     title: branding.title || 'JEOPARDY',
                     logo: branding.logo || '',
-                    showFinalJeopardy: branding.showFinalJeopardy !== false
+                    showFinalJeopardy: branding.showFinalJeopardy !== false,
+                    finalQuestion: branding.finalQuestion || '',
+                    finalAnswer: branding.finalAnswer || ''
                 },
                 teams: teams.map(t => ({
                     id: t.id,

@@ -2,7 +2,9 @@
   "branding": {
     "title": "What's The Question?",
     "logo": "images/learn-with-cisco.png",
-    "showFinalJeopardy": true
+    "showFinalJeopardy": true,
+    "finalQuestion": "FINAL JEOPARDY: This new 350-901 exam replaces DEVCOR and introduces a focus on AI agents and the Model Context Protocol.",
+    "finalAnswer": "What is AUTOCOR?"
   },
   "teams": [
     {

@@ -1,4 +1,9 @@
-[
+{
+  "finalJeopardy": {
+    "q": "FINAL JEOPARDY: This new 350-901 exam replaces DEVCOR and introduces a focus on AI agents and the Model Context Protocol.",
+    "a": "What is AUTOCOR?"
+  },
+  "categories": [
   {
     "name": "Network Automation",
     "questions": [
@@ -96,3 +101,4 @@
 ]
   }
 ]
+}
