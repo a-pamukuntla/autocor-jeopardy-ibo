@@ -1,0 +1,40 @@
+{
+  "branding": {
+    "title": "What's The Question?",
+    "logo": "images/learn-with-cisco.png",
+    "showFinalJeopardy": true
+  },
+  "teams": [
+    {
+      "id": "ansible",
+      "name": "Ansible",
+      "color": "#EE0000",
+      "image": ""
+    },
+    {
+      "id": "terraform",
+      "name": "Terraform",
+      "color": "#7B42BC",
+      "image": ""
+    },
+    {
+      "id": "python",
+      "name": "Python",
+      "color": "#3776AB",
+      "secondaryColor": "#FFD43B",
+      "image": ""
+    },
+    {
+      "id": "yang",
+      "name": "YANG",
+      "color": "#2E7D32",
+      "image": ""
+    },
+    {
+      "id": "pyats",
+      "name": "pyATS",
+      "color": "#FF6B35",
+      "image": ""
+    }
+  ]
+}

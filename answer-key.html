@@ -243,7 +243,7 @@
     <div id="answer-screen">
         <header>
             <div class="header-left">
-                <img id="cisco-logo" src="https://www.ciscolive.com/c/dam/r/ciscolive/headlibs/img/global-event/logo-dark-2025-new.svg" alt="Cisco Live 2025">
+                <img id="cisco-logo" src="images/learn-with-cisco.png" alt="Logo">
                 <h1>ANSWER KEY</h1>
             </div>
             <div id="status" class="disconnected">🔴 Offline</div>
@@ -278,41 +278,68 @@
     <script src="https://unpkg.com/mqtt@5.3.5/dist/mqtt.min.js"></script>
     <script>
         const CORRECT_PASSWORD = 'Cisco1234!';
-        const MQTT_BROKER = 'wss://test.mosquitto.org:8081';
-        const TOPIC_QUESTION = 'jeopardy/question';
-        const TOPIC_BUZZ = 'jeopardy/buzz';
+        const MQTT_BROKER = 'wss://broker.emqx.io:8084/mqtt';
+        const INSTANCE_ID = window.location.host.replace(/[^a-zA-Z0-9]/g, '-');
+        const TOPIC_QUESTION = `jeopardy/${INSTANCE_ID}/question`;
+        const TOPIC_BUZZ = `jeopardy/${INSTANCE_ID}/buzz`;
+        const TOPIC_CONFIG = `jeopardy/${INSTANCE_ID}/config`;
         
-        const TEAMS = {
-            ansible: {
-                name: 'Ansible',
-                icon: '<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><circle cx="50" cy="50" r="45" fill="#EE0000" stroke="#fff" stroke-width="3"/><text x="50" y="65" font-size="50" font-weight="bold" fill="white" text-anchor="middle" font-family="Arial">A</text></svg>'
-            },
-            terraform: {
-                name: 'Terraform',
-                icon: '<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><rect x="5" y="5" width="90" height="90" rx="10" fill="#7B42BC" stroke="#fff" stroke-width="3"/><text x="50" y="70" font-size="50" font-weight="bold" fill="white" text-anchor="middle" font-family="Arial">T</text></svg>'
-            },
-            python: {
-                name: 'Python',
-                icon: '<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><circle cx="50" cy="50" r="45" fill="#3776AB" stroke="#FFD43B" stroke-width="4"/><text x="50" y="65" font-size="50" font-weight="bold" fill="#FFD43B" text-anchor="middle" font-family="Arial">P</text></svg>'
-            },
-            yang: {
-                name: 'YANG',
-                icon: '<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><circle cx="50" cy="50" r="45" fill="#2E7D32" stroke="#fff" stroke-width="3"/><path d="M50 20 L50 50 M50 50 L35 70 M50 50 L65 70 M35 70 L25 85 M35 70 L45 85 M65 70 L55 85 M65 70 L75 85" stroke="white" stroke-width="4" stroke-linecap="round" fill="none"/></svg>'
-            },
-            pyats: {
-                name: 'pyATS',
-                icon: '<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><circle cx="50" cy="50" r="45" fill="#FF6B35" stroke="#fff" stroke-width="3"/><path d="M35 70 L35 45 Q35 35 45 35 L55 35 Q65 35 65 45 L65 55" stroke="white" stroke-width="5" fill="none" stroke-linecap="round"/><circle cx="50" cy="65" r="4" fill="white"/><path d="M42 75 L58 75" stroke="#4CAF50" stroke-width="6" stroke-linecap="round"/></svg>'
-            }
-        };
-        
+        let TEAMS = {};
         let mqttClient = null;
 
+        function getInitials(name) {
+            return name.split(/\s+/).map(w => w[0]).join('').toUpperCase().slice(0, 2);
+        }
+
+        function generateIcon(team) {
+            if (team.image) {
+                return `<img src="${team.image}" alt="${team.name}" style="width:100%;height:100%;object-fit:contain;border-radius:50%;">`;
+            }
+            const initials = getInitials(team.name);
+            const fontSize = initials.length > 1 ? 36 : 50;
+            const stroke = team.secondaryColor || '#fff';
+            return `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><circle cx="50" cy="50" r="45" fill="${team.color}" stroke="${stroke}" stroke-width="3"/><text x="50" y="${fontSize > 36 ? 65 : 62}" font-size="${fontSize}" font-weight="bold" fill="white" text-anchor="middle" font-family="Arial">${initials}</text></svg>`;
+        }
+
+        function applyConfig(config) {
+            TEAMS = {};
+            config.teams.forEach(team => {
+                TEAMS[team.id] = {
+                    name: team.name,
+                    color: team.color,
+                    icon: generateIcon(team)
+                };
+            });
+            if (config.branding) {
+                applyBranding(config.branding);
+            }
+        }
+
+        function applyBranding(b) {
+            const logo = document.getElementById('cisco-logo');
+            const title = document.querySelector('.header-left h1');
+            if (b.title) title.textContent = b.title;
+            if (b.logo) {
+                logo.src = b.logo;
+                logo.style.display = 'block';
+            } else {
+                logo.style.display = 'none';
+            }
+        }
+
+        async function loadConfig() {
+            const res = await fetch('./config.json');
+            const config = await res.json();
+            applyConfig(config);
+        }
+
         // Login functionality
-        function login() {
+        async function login() {
             const password = document.getElementById('password-input').value;
             if (password === CORRECT_PASSWORD) {
                 document.getElementById('login-screen').style.display = 'none';
                 document.getElementById('answer-screen').style.display = 'flex';
+                await loadConfig();
                 connectMQTT();
             } else {
                 document.getElementById('error-msg').style.display = 'block';
@@ -339,14 +366,20 @@
                     document.getElementById('status').className = 'connected';
                     document.getElementById('status').textContent = '🟢 Connected';
                     
-                    mqttClient.subscribe([TOPIC_QUESTION, TOPIC_BUZZ], (err) => {
+                    mqttClient.subscribe([TOPIC_QUESTION, TOPIC_BUZZ, TOPIC_CONFIG], (err) => {
                         if (err) console.error('Subscribe error:', err);
                     });
                 });
 
                 mqttClient.on('message', (topic, message) => {
+                    if (topic === TOPIC_CONFIG) {
+                        try {
+                            const config = JSON.parse(message.toString());
+                            applyConfig(config);
+                        } catch (e) {}
+                        return;
+                    }
                     const data = JSON.parse(message.toString());
-                    
                     if (topic === TOPIC_QUESTION) {
                         showQuestion(data);
                     } else if (topic === TOPIC_BUZZ) {

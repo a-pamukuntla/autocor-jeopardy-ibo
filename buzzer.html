@@ -131,32 +131,44 @@
 
     <script src="https://unpkg.com/mqtt@5.3.5/dist/mqtt.min.js"></script>
     <script>
-        const TEAMS = {
-            ansible: {
-                name: 'Ansible',
-                icon: '<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><circle cx="50" cy="50" r="45" fill="#EE0000" stroke="#fff" stroke-width="3"/><text x="50" y="65" font-size="50" font-weight="bold" fill="white" text-anchor="middle" font-family="Arial">A</text></svg>'
-            },
-            terraform: {
-                name: 'Terraform',
-                icon: '<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><rect x="5" y="5" width="90" height="90" rx="10" fill="#7B42BC" stroke="#fff" stroke-width="3"/><text x="50" y="70" font-size="50" font-weight="bold" fill="white" text-anchor="middle" font-family="Arial">T</text></svg>'
-            },
-            python: {
-                name: 'Python',
-                icon: '<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><circle cx="50" cy="50" r="45" fill="#3776AB" stroke="#FFD43B" stroke-width="4"/><text x="50" y="65" font-size="50" font-weight="bold" fill="#FFD43B" text-anchor="middle" font-family="Arial">P</text></svg>'
-            },
-            yang: {
-                name: 'YANG',
-                icon: '<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><circle cx="50" cy="50" r="45" fill="#2E7D32" stroke="#fff" stroke-width="3"/><path d="M50 20 L50 50 M50 50 L35 70 M50 50 L65 70 M35 70 L25 85 M35 70 L45 85 M65 70 L55 85 M65 70 L75 85" stroke="white" stroke-width="4" stroke-linecap="round" fill="none"/></svg>'
-            },
-            pyats: {
-                name: 'pyATS',
-                icon: '<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><circle cx="50" cy="50" r="45" fill="#FF6B35" stroke="#fff" stroke-width="3"/><path d="M35 70 L35 45 Q35 35 45 35 L55 35 Q65 35 65 45 L65 55" stroke="white" stroke-width="5" fill="none" stroke-linecap="round"/><circle cx="50" cy="65" r="4" fill="white"/><path d="M42 75 L58 75" stroke="#4CAF50" stroke-width="6" stroke-linecap="round"/></svg>'
-            }
-        };
+        let TEAMS = {};
 
-        const MQTT_BROKER = 'wss://test.mosquitto.org:8081';
-        const TOPIC_BUZZ = 'jeopardy/buzz';
-        const TOPIC_CONTROL = 'jeopardy/control';
+        function getInitials(name) {
+            return name.split(/\s+/).map(w => w[0]).join('').toUpperCase().slice(0, 2);
+        }
+
+        function generateIcon(team) {
+            if (team.image) {
+                return `<img src="${team.image}" alt="${team.name}" style="width:100%;height:100%;object-fit:contain;border-radius:50%;">`;
+            }
+            const initials = getInitials(team.name);
+            const fontSize = initials.length > 1 ? 36 : 50;
+            const stroke = team.secondaryColor || '#fff';
+            return `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><circle cx="50" cy="50" r="45" fill="${team.color}" stroke="${stroke}" stroke-width="3"/><text x="50" y="${fontSize > 36 ? 65 : 62}" font-size="${fontSize}" font-weight="bold" fill="white" text-anchor="middle" font-family="Arial">${initials}</text></svg>`;
+        }
+
+        function applyConfig(config) {
+            TEAMS = {};
+            config.teams.forEach(team => {
+                TEAMS[team.id] = {
+                    name: team.name,
+                    color: team.color,
+                    icon: generateIcon(team)
+                };
+            });
+        }
+
+        async function loadConfig() {
+            const res = await fetch('./config.json');
+            const config = await res.json();
+            applyConfig(config);
+        }
+
+        const MQTT_BROKER = 'wss://broker.emqx.io:8084/mqtt';
+        const INSTANCE_ID = window.location.host.replace(/[^a-zA-Z0-9]/g, '-');
+        const TOPIC_BUZZ = `jeopardy/${INSTANCE_ID}/buzz`;
+        const TOPIC_CONTROL = `jeopardy/${INSTANCE_ID}/control`;
+        const TOPIC_CONFIG = `jeopardy/${INSTANCE_ID}/config`;
         
         let client = null;
         let selectedTeam = null;
@@ -204,13 +216,27 @@
                     document.getElementById('status').className = 'status connected';
                     document.getElementById('status').textContent = '🟢 Connected - Ready to play!';
                     
-                    // Subscribe to control messages
-                    client.subscribe(TOPIC_CONTROL, (err) => {
+                    client.subscribe([TOPIC_CONTROL, TOPIC_CONFIG], (err) => {
                         if (err) console.error('Subscribe error:', err);
                     });
                 });
 
                 client.on('message', (topic, message) => {
+                    if (topic === TOPIC_CONFIG) {
+                        try {
+                            const config = JSON.parse(message.toString());
+                            applyConfig(config);
+                            if (selectedTeam && TEAMS[selectedTeam]) {
+                                const team = TEAMS[selectedTeam];
+                                document.getElementById('team-info').innerHTML = `
+                                    ${team.icon}
+                                    <h2>Team ${team.name}</h2>
+                                    <p>You're ready to buzz in for your team!</p>
+                                `;
+                            }
+                        } catch (e) {}
+                        return;
+                    }
                     if (topic === TOPIC_CONTROL) {
                         const msg = message.toString();
                         
@@ -337,21 +363,18 @@
         }
 
         function getTeamName(team) {
-            const names = {
-                ansible: 'Ansible',
-                terraform: 'Terraform',
-                python: 'Python',
-                yang: 'YANG',
-                pyats: 'pyATS'
-            };
-            return names[team] || team;
+            return TEAMS[team] ? TEAMS[team].name : team;
         }
 
         // Initialize
-        if (initTeam()) {
-            connectMQTT();
-            updateBuzzerState();
+        async function start() {
+            await loadConfig();
+            if (initTeam()) {
+                connectMQTT();
+                updateBuzzerState();
+            }
         }
+        start();
     </script>
 </body>
 </html>

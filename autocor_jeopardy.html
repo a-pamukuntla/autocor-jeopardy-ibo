@@ -6,7 +6,7 @@
     <style>
         body { font-family: 'Segoe UI', sans-serif; background-color: #000033; color: white; margin: 0; display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
         header { background-color: #000055; padding: 10px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid gold; }
-        #cisco-logo { height: 40px; margin-right: 20px; background: white; padding: 5px 10px; border-radius: 5px; }
+        #cisco-logo { height: 45px; margin-right: 20px; background: white; padding: 5px 10px; border-radius: 5px; }
         .header-left { display: flex; align-items: center; gap: 20px; background: white; padding: 10px 20px; border-radius: 8px; }
         .header-left h1 { color: #049fd9; margin: 0; font-size: 1.8rem; font-weight: 600; }
         #mqtt-status { font-size: 0.9rem; padding: 5px 10px; border-radius: 5px; background: rgba(255,255,255,0.1); }
@@ -60,8 +60,8 @@
 
 <header>
     <div class="header-left">
-        <img id="cisco-logo" src="https://www.ciscolive.com/c/dam/r/ciscolive/headlibs/img/global-event/logo-dark-2025-new.svg" alt="Cisco Live 2025">
-        <h1>CCNP AUTOCOR JEOPARDY</h1>
+        <img id="cisco-logo" src="images/learn-with-cisco.png" alt="Logo">
+        <h1>What's The Question?</h1>
     </div>
     <div id="mqtt-status" class="disconnected">🔴 Offline</div>
 </header>
@@ -122,55 +122,89 @@
 
 <script src="https://unpkg.com/mqtt@5.3.5/dist/mqtt.min.js"></script>
 <script>
-    const TEAMS = {
-        ansible: {
-            name: 'Ansible',
-            icon: '<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><circle cx="50" cy="50" r="45" fill="#EE0000" stroke="#fff" stroke-width="3"/><text x="50" y="65" font-size="50" font-weight="bold" fill="white" text-anchor="middle" font-family="Arial">A</text></svg>'
-        },
-        terraform: {
-            name: 'Terraform',
-            icon: '<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><rect x="5" y="5" width="90" height="90" rx="10" fill="#7B42BC" stroke="#fff" stroke-width="3"/><text x="50" y="70" font-size="50" font-weight="bold" fill="white" text-anchor="middle" font-family="Arial">T</text></svg>'
-        },
-        python: {
-            name: 'Python',
-            icon: '<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><circle cx="50" cy="50" r="45" fill="#3776AB" stroke="#FFD43B" stroke-width="4"/><text x="50" y="65" font-size="50" font-weight="bold" fill="#FFD43B" text-anchor="middle" font-family="Arial">P</text></svg>'
-        },
-        yang: {
-            name: 'YANG',
-            icon: '<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><circle cx="50" cy="50" r="45" fill="#2E7D32" stroke="#fff" stroke-width="3"/><path d="M50 20 L50 50 M50 50 L35 70 M50 50 L65 70 M35 70 L25 85 M35 70 L45 85 M65 70 L55 85 M65 70 L75 85" stroke="white" stroke-width="4" stroke-linecap="round" fill="none"/></svg>'
-        },
-        pyats: {
-            name: 'pyATS',
-            icon: '<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><circle cx="50" cy="50" r="45" fill="#FF6B35" stroke="#fff" stroke-width="3"/><path d="M35 70 L35 45 Q35 35 45 35 L55 35 Q65 35 65 45 L65 55" stroke="white" stroke-width="5" fill="none" stroke-linecap="round"/><circle cx="50" cy="65" r="4" fill="white"/><path d="M42 75 L58 75" stroke="#4CAF50" stroke-width="6" stroke-linecap="round"/></svg>'
-        }
-    };
+    let TEAMS = {};
 
-    const MQTT_BROKER = 'wss://test.mosquitto.org:8081';
-    const TOPIC_BUZZ = 'jeopardy/buzz';
-    const TOPIC_CONTROL = 'jeopardy/control';
-    const TOPIC_QUESTION = 'jeopardy/question';
+    function getInitials(name) {
+        return name.split(/\s+/).map(w => w[0]).join('').toUpperCase().slice(0, 2);
+    }
+
+    function generateIcon(team) {
+        if (team.image) {
+            return `<img src="${team.image}" alt="${team.name}" style="width:100%;height:100%;object-fit:contain;border-radius:50%;">`;
+        }
+        const initials = getInitials(team.name);
+        const fontSize = initials.length > 1 ? 36 : 50;
+        const stroke = team.secondaryColor || '#fff';
+        return `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><circle cx="50" cy="50" r="45" fill="${team.color}" stroke="${stroke}" stroke-width="3"/><text x="50" y="${fontSize > 36 ? 65 : 62}" font-size="${fontSize}" font-weight="bold" fill="white" text-anchor="middle" font-family="Arial">${initials}</text></svg>`;
+    }
+
+    function applyConfig(config) {
+        TEAMS = {};
+        config.teams.forEach(team => {
+            TEAMS[team.id] = {
+                name: team.name,
+                color: team.color,
+                icon: generateIcon(team)
+            };
+        });
+        if (config.branding) {
+            applyBranding(config.branding);
+        }
+    }
+
+    function applyBranding(b) {
+        const logo = document.getElementById('cisco-logo');
+        const title = document.querySelector('.header-left h1');
+        if (b.title) title.textContent = b.title;
+        if (b.logo) {
+            logo.src = b.logo;
+            logo.style.display = 'block';
+        } else {
+            logo.style.display = 'none';
+        }
+        const finalBtn = document.querySelector('footer');
+        if (finalBtn) {
+            finalBtn.style.display = b.showFinalJeopardy === false ? 'none' : 'block';
+        }
+    }
+
+    async function loadConfig() {
+        const res = await fetch('./config.json');
+        const config = await res.json();
+        applyConfig(config);
+    }
+
+    const MQTT_BROKER = 'wss://broker.emqx.io:8084/mqtt';
+    const INSTANCE_ID = window.location.host.replace(/[^a-zA-Z0-9]/g, '-');
+    const TOPIC_BUZZ = `jeopardy/${INSTANCE_ID}/buzz`;
+    const TOPIC_CONTROL = `jeopardy/${INSTANCE_ID}/control`;
+    const TOPIC_QUESTION = `jeopardy/${INSTANCE_ID}/question`;
+    const TOPIC_CONFIG = `jeopardy/${INSTANCE_ID}/config`;
     
     let mqttClient = null;
     let categories = [];
-    let scores = { ansible: 0, terraform: 0, python: 0, yang: 0, pyats: 0 };
+    let scores = {};
     let currentPoints = 0;
     let buzzerLocked = false;
     let currentBuzzingTeam = null;
     let teamsAttempted = []; // Track which teams have tried current question
     let sessionId = Date.now(); // Unique ID for this game session
     let audioContext = null; // Reusable audio context
+    let currentTile = null; // Track the active tile for deferred disabling
 
     async function init() {
         const urlParams = new URLSearchParams(window.location.search);
         const board = urlParams.get('board') || 'session_1';
         try {
+            await loadConfig();
+            Object.keys(TEAMS).forEach(id => { scores[id] = 0; });
             const res = await fetch(`./data/${board}.json`);
             categories = await res.json();
             renderBoard();
             renderScoreboard();
             connectMQTT();
         } catch (e) {
-            document.getElementById('game-board').innerHTML = "<h2>Error loading JSON. Check /data/ folder.</h2>";
+            document.getElementById('game-board').innerHTML = "<h2>Error loading config or game data. Check config.json and /data/ folder.</h2>";
         }
     }
 
@@ -186,12 +220,24 @@
                 document.getElementById('mqtt-status').className = 'connected';
                 document.getElementById('mqtt-status').textContent = '🟢 Live';
                 
-                mqttClient.subscribe(TOPIC_BUZZ, (err) => {
+                mqttClient.subscribe([TOPIC_BUZZ, TOPIC_CONFIG], (err) => {
                     if (err) console.error('Subscribe error:', err);
                 });
             });
 
             mqttClient.on('message', (topic, message) => {
+                if (topic === TOPIC_CONFIG) {
+                    try {
+                        const config = JSON.parse(message.toString());
+                        applyConfig(config);
+                        Object.keys(TEAMS).forEach(id => {
+                            if (!(id in scores)) scores[id] = 0;
+                        });
+                        renderScoreboard();
+                        renderBoard();
+                    } catch (e) {}
+                    return;
+                }
                 if (topic === TOPIC_BUZZ && !buzzerLocked) {
                     const data = JSON.parse(message.toString());
                     handleBuzz(data.team, data.timestamp);
@@ -314,11 +360,10 @@
         if (!currentBuzzingTeam) return;
         
         if (isCorrect) {
-            // Add points
             scores[currentBuzzingTeam] += currentPoints;
             updatePreviews();
+            if (currentTile) currentTile.classList.add('disabled');
             
-            // Auto-reveal answer on correct (but don't close)
             document.getElementById('answer-area').style.display = 'block';
             document.getElementById('reveal-btn').style.display = 'none';
             document.getElementById('quick-scoring').classList.remove('active');
@@ -351,6 +396,7 @@
                 }
             } else {
                 // All teams have tried - reveal answer
+                if (currentTile) currentTile.classList.add('disabled');
                 document.getElementById('answer-area').style.display = 'block';
                 document.getElementById('reveal-btn').style.display = 'none';
                 document.getElementById('quick-scoring').classList.remove('active');
@@ -403,7 +449,7 @@
                 t.className = 'tile';
                 t.innerText = p;
                 t.onclick = () => {
-                    t.classList.add('disabled');
+                    currentTile = t;
                     currentPoints = p;
                     
                     // Auto-reset buzzer when new question is clicked
@@ -449,10 +495,9 @@
     }
 
     function reveal() {
+        if (currentTile) currentTile.classList.add('disabled');
         document.getElementById('answer-area').style.display = 'block';
         document.getElementById('reveal-btn').style.display = 'none';
-        
-        // Hide quick scoring when answer is revealed
         document.getElementById('quick-scoring').classList.remove('active');
     }
 

@@ -98,11 +98,6 @@
             align-items: center;
             gap: 15px;
         }
-        .buzzer-card.ansible { border-color: #EE0000; }
-        .buzzer-card.terraform { border-color: #7B42BC; }
-        .buzzer-card.python { border-color: #3776AB; }
-        .buzzer-card.yang { border-color: #2E7D32; }
-        .buzzer-card.pyats { border-color: #FF6B35; }
         .team-icon {
             width: 50px;
             height: 50px;
@@ -237,11 +232,6 @@
             justify-content: space-between;
             align-items: center;
         }
-        .url-item.ansible { border-color: #EE0000; }
-        .url-item.terraform { border-color: #7B42BC; }
-        .url-item.python { border-color: #3776AB; }
-        .url-item.yang { border-color: #2E7D32; }
-        .url-item.pyats { border-color: #FF6B35; }
         .url-text {
             font-family: 'Courier New', monospace;
             font-size: 0.9rem;
@@ -285,78 +275,7 @@
         <div class="main-content">
             <div class="buzzers-section">
                 <h2>Team Buzzers</h2>
-                <div class="buzzer-grid">
-                    <div class="buzzer-card ansible">
-                        <div class="team-icon">
-                            <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-                                <circle cx="50" cy="50" r="45" fill="#EE0000" stroke="#fff" stroke-width="3"/>
-                                <text x="50" y="65" font-size="50" font-weight="bold" fill="white" text-anchor="middle" font-family="Arial">A</text>
-                            </svg>
-                        </div>
-                        <div class="team-info">
-                            <div class="team-name">Ansible</div>
-                            <div class="team-status" id="status-ansible">Ready</div>
-                        </div>
-                        <button class="buzz-btn" data-team="ansible" onclick="buzz('ansible')">BUZZ</button>
-                    </div>
-
-                    <div class="buzzer-card terraform">
-                        <div class="team-icon">
-                            <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-                                <rect x="5" y="5" width="90" height="90" rx="10" fill="#7B42BC" stroke="#fff" stroke-width="3"/>
-                                <text x="50" y="70" font-size="50" font-weight="bold" fill="white" text-anchor="middle" font-family="Arial">T</text>
-                            </svg>
-                        </div>
-                        <div class="team-info">
-                            <div class="team-name">Terraform</div>
-                            <div class="team-status" id="status-terraform">Ready</div>
-                        </div>
-                        <button class="buzz-btn" data-team="terraform" onclick="buzz('terraform')">BUZZ</button>
-                    </div>
-
-                    <div class="buzzer-card python">
-                        <div class="team-icon">
-                            <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-                                <circle cx="50" cy="50" r="45" fill="#3776AB" stroke="#FFD43B" stroke-width="4"/>
-                                <text x="50" y="65" font-size="50" font-weight="bold" fill="#FFD43B" text-anchor="middle" font-family="Arial">P</text>
-                            </svg>
-                        </div>
-                        <div class="team-info">
-                            <div class="team-name">Python</div>
-                            <div class="team-status" id="status-python">Ready</div>
-                        </div>
-                        <button class="buzz-btn" data-team="python" onclick="buzz('python')">BUZZ</button>
-                    </div>
-
-                    <div class="buzzer-card yang">
-                        <div class="team-icon">
-                            <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-                                <circle cx="50" cy="50" r="45" fill="#2E7D32" stroke="#fff" stroke-width="3"/>
-                                <path d="M50 20 L50 50 M50 50 L35 70 M50 50 L65 70 M35 70 L25 85 M35 70 L45 85 M65 70 L55 85 M65 70 L75 85" stroke="white" stroke-width="4" stroke-linecap="round" fill="none"/>
-                            </svg>
-                        </div>
-                        <div class="team-info">
-                            <div class="team-name">YANG</div>
-                            <div class="team-status" id="status-yang">Ready</div>
-                        </div>
-                        <button class="buzz-btn" data-team="yang" onclick="buzz('yang')">BUZZ</button>
-                    </div>
-
-                    <div class="buzzer-card pyats">
-                        <div class="team-icon">
-                            <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-                                <circle cx="50" cy="50" r="45" fill="#FF6B35" stroke="#fff" stroke-width="3"/>
-                                <path d="M35 70 L35 45 Q35 35 45 35 L55 35 Q65 35 65 45 L65 55" stroke="white" stroke-width="5" fill="none" stroke-linecap="round"/>
-                                <circle cx="50" cy="65" r="4" fill="white"/>
-                                <path d="M42 75 L58 75" stroke="#4CAF50" stroke-width="6" stroke-linecap="round"/>
-                            </svg>
-                        </div>
-                        <div class="team-info">
-                            <div class="team-name">pyATS</div>
-                            <div class="team-status" id="status-pyats">Ready</div>
-                        </div>
-                        <button class="buzz-btn" data-team="pyats" onclick="buzz('pyats')">BUZZ</button>
-                    </div>
+                <div class="buzzer-grid" id="buzzer-grid">
                 </div>
             </div>
 
@@ -379,46 +298,70 @@
             <p style="color: #ccc; margin-bottom: 15px; font-size: 0.9rem;">
                 Replace <code>localhost:8000</code> with your actual server URL (e.g., your laptop's IP or GitHub Pages URL)
             </p>
-            <div class="url-list">
-                <div class="url-item ansible">
-                    <span class="url-text" id="url-ansible">http://localhost:8000/buzzer.html?team=ansible</span>
-                    <button class="copy-btn" onclick="copyUrl('ansible')">Copy</button>
-                </div>
-                <div class="url-item terraform">
-                    <span class="url-text" id="url-terraform">http://localhost:8000/buzzer.html?team=terraform</span>
-                    <button class="copy-btn" onclick="copyUrl('terraform')">Copy</button>
-                </div>
-                <div class="url-item python">
-                    <span class="url-text" id="url-python">http://localhost:8000/buzzer.html?team=python</span>
-                    <button class="copy-btn" onclick="copyUrl('python')">Copy</button>
-                </div>
-                <div class="url-item yang">
-                    <span class="url-text" id="url-yang">http://localhost:8000/buzzer.html?team=yang</span>
-                    <button class="copy-btn" onclick="copyUrl('yang')">Copy</button>
-                </div>
-                <div class="url-item pyats">
-                    <span class="url-text" id="url-pyats">http://localhost:8000/buzzer.html?team=pyats</span>
-                    <button class="copy-btn" onclick="copyUrl('pyats')">Copy</button>
-                </div>
+            <div class="url-list" id="url-list">
             </div>
         </div>
     </div>
 
     <script src="https://unpkg.com/mqtt@5.3.5/dist/mqtt.min.js"></script>
     <script>
-        const MQTT_BROKER = 'wss://test.mosquitto.org:8081';
-        const TOPIC_BUZZ = 'jeopardy/buzz';
-        const TOPIC_CONTROL = 'jeopardy/control';
-        
+        const MQTT_BROKER = 'wss://broker.emqx.io:8084/mqtt';
+        const INSTANCE_ID = window.location.host.replace(/[^a-zA-Z0-9]/g, '-');
+        const TOPIC_BUZZ = `jeopardy/${INSTANCE_ID}/buzz`;
+        const TOPIC_CONTROL = `jeopardy/${INSTANCE_ID}/control`;
+        const TOPIC_CONFIG = `jeopardy/${INSTANCE_ID}/config`;
+
+        let TEAMS = {};
         let client = null;
-        let buzzerStates = {
-            ansible: true,
-            terraform: true,
-            python: true,
-            yang: true,
-            pyats: true
-        };
+        let buzzerStates = {};
         let autoScroll = true;
+
+        function getInitials(name) {
+            return name.split(/\s+/).map(w => w[0]).join('').toUpperCase().slice(0, 2);
+        }
+
+        function generateIcon(team) {
+            if (team.image) {
+                return `<img src="${team.image}" alt="${team.name}" style="width:100%;height:100%;object-fit:contain;border-radius:50%;">`;
+            }
+            const initials = getInitials(team.name);
+            const fontSize = initials.length > 1 ? 36 : 50;
+            const stroke = team.secondaryColor || '#fff';
+            return `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><circle cx="50" cy="50" r="45" fill="${team.color}" stroke="${stroke}" stroke-width="3"/><text x="50" y="${fontSize > 36 ? 65 : 62}" font-size="${fontSize}" font-weight="bold" fill="white" text-anchor="middle" font-family="Arial">${initials}</text></svg>`;
+        }
+
+        function applyConfig(config) {
+            TEAMS = {};
+            buzzerStates = {};
+            config.teams.forEach(team => {
+                TEAMS[team.id] = {
+                    name: team.name,
+                    color: team.color,
+                    icon: generateIcon(team)
+                };
+                buzzerStates[team.id] = true;
+            });
+        }
+
+        async function loadConfig() {
+            const res = await fetch('./config.json');
+            const config = await res.json();
+            applyConfig(config);
+        }
+
+        function renderBuzzerGrid() {
+            const grid = document.getElementById('buzzer-grid');
+            grid.innerHTML = Object.entries(TEAMS).map(([id, team]) => `
+                <div class="buzzer-card" style="border-color: ${team.color};">
+                    <div class="team-icon">${team.icon}</div>
+                    <div class="team-info">
+                        <div class="team-name">${team.name}</div>
+                        <div class="team-status" id="status-${id}">Ready</div>
+                    </div>
+                    <button class="buzz-btn" data-team="${id}" onclick="buzz('${id}')">BUZZ</button>
+                </div>
+            `).join('');
+        }
 
         function log(message, type = 'system', topic = null, payload = null) {
             const consoleLog = document.getElementById('console-log');
@@ -448,6 +391,7 @@
         }
 
         function connectMQTT() {
+            log(`Instance: ${INSTANCE_ID} → topics: ${TOPIC_BUZZ}, ${TOPIC_CONTROL}`, 'system');
             log('Connecting to MQTT broker...', 'system');
             
             try {
@@ -462,18 +406,28 @@
                     document.getElementById('status-text').textContent = '🟢 Connected to MQTT broker';
                     log('✅ Connected to MQTT broker successfully', 'system');
                     
-                    // Subscribe to both topics
-                    client.subscribe([TOPIC_BUZZ, TOPIC_CONTROL], (err) => {
+                    client.subscribe([TOPIC_BUZZ, TOPIC_CONTROL, TOPIC_CONFIG], (err) => {
                         if (err) {
                             log('❌ Subscribe error: ' + err.message, 'error');
                         } else {
-                            log('✅ Subscribed to topics: ' + TOPIC_BUZZ + ', ' + TOPIC_CONTROL, 'system');
+                            log('✅ Subscribed to topics: ' + TOPIC_BUZZ + ', ' + TOPIC_CONTROL + ', ' + TOPIC_CONFIG, 'system');
                         }
                     });
                 });
 
                 client.on('message', (topic, message) => {
                     const msg = message.toString();
+
+                    if (topic === TOPIC_CONFIG) {
+                        try {
+                            const config = JSON.parse(msg);
+                            applyConfig(config);
+                            renderBuzzerGrid();
+                            renderUrls();
+                            log('🔄 Config updated live from team manager', 'system');
+                        } catch (e) {}
+                        return;
+                    }
                     
                     if (topic === TOPIC_BUZZ) {
                         try {
@@ -657,8 +611,27 @@
             });
         }
 
+        // Generate URLs based on current deployment origin
+        function renderUrls() {
+            const baseUrl = window.location.origin + window.location.pathname.replace('test-buzzers.html', 'buzzer.html');
+            const urlList = document.getElementById('url-list');
+            urlList.innerHTML = Object.entries(TEAMS).map(([id, team]) => {
+                const url = `${baseUrl}?team=${id}`;
+                return `<div class="url-item" style="border-color: ${team.color};">
+                    <span class="url-text" id="url-${id}">${url}</span>
+                    <button class="copy-btn" onclick="copyUrl('${id}')">Copy</button>
+                </div>`;
+            }).join('');
+        }
+
         // Initialize
-        connectMQTT();
+        async function start() {
+            await loadConfig();
+            renderBuzzerGrid();
+            renderUrls();
+            connectMQTT();
+        }
+        start();
     </script>
 </body>
 </html>
