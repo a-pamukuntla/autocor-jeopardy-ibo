@@ -1,231 +1,193 @@
-<div align="center">
+# What's The Question?
 
-```diff
-╔═══════════════════════════════════════════════════════════════════════════════╗
-║                                                                               ║
-+   ██╗    ██╗███████╗██╗      ██████╗ ██████╗ ███╗   ███╗███████╗            
-+   ██║    ██║██╔════╝██║     ██╔════╝██╔═══██╗████╗ ████║██╔════╝            
-+   ██║ █╗ ██║█████╗  ██║     ██║     ██║   ██║██╔████╔██║█████╗              
-+   ██║███╗██║██╔══╝  ██║     ██║     ██║   ██║██║╚██╔╝██║██╔══╝              
-+   ╚███╔███╔╝███████╗███████╗╚██████╗╚██████╔╝██║ ╚═╝ ██║███████╗            
-+    ╚══╝╚══╝ ╚══════╝╚══════╝ ╚═════╝ ╚═════╝ ╚═╝     ╚═╝╚══════╝            
-║                                                                               ║
-@                         ████████╗ ██████╗                                    
-@                         ╚══██╔══╝██╔═══██╗                                   
-@                            ██║   ██║   ██║                                   
-@                            ██║   ██║   ██║                                   
-@                            ██║   ╚██████╔╝                                   
-@                            ╚═╝    ╚═════╝                                    
-║                                                                               ║
-!        ██████╗██╗███████╗ ██████╗ ██████╗     ██╗     ██╗██╗   ██╗███████╗  
-!       ██╔════╝██║██╔════╝██╔════╝██╔═══██╗    ██║     ██║██║   ██║██╔════╝  
-!       ██║     ██║███████╗██║     ██║   ██║    ██║     ██║██║   ██║█████╗    
-!       ██║     ██║╚════██║██║     ██║   ██║    ██║     ██║╚██╗ ██╔╝██╔══╝    
-!       ╚██████╗██║███████║╚██████╗╚██████╔╝    ███████╗██║ ╚████╔╝ ███████╗  
-!        ╚═════╝╚═╝╚══════╝ ╚═════╝ ╚═════╝     ╚══════╝╚═╝  ╚═══╝  ╚══════╝  
-║                                                                               ║
--                 ██╗███████╗ ██████╗ ██████╗  █████╗ ██████╗ ██████╗ ██╗   ██╗
--                 ██║██╔════╝██╔═══██╗██╔══██╗██╔══██╗██╔══██╗██╔══██╗╚██╗ ██╔╝
--                 ██║█████╗  ██║   ██║██████╔╝███████║██████╔╝██║  ██║ ╚████╔╝ 
--            ██   ██║██╔══╝  ██║   ██║██╔═══╝ ██╔══██║██╔══██╗██║  ██║  ╚██╔╝  
--            ╚█████╔╝███████╗╚██████╔╝██║     ██║  ██║██║  ██║██████╔╝   ██║   
--             ╚════╝ ╚══════╝ ╚═════╝ ╚═╝     ╚═╝  ╚═╝╚═╝  ╚═╝╚═════╝    ╚═╝   
-║                                                                               ║
-#                    CCNP Automation Core (AUTOCOR) Edition                    
-#                         Session: IBOCRT-2775                                 
-║                                                                               ║
-╚═══════════════════════════════════════════════════════════════════════════════╝
-```
-
-</div>
-
-<div align="center">
-
-### 🎮 Interactive Jeopardy Game with Real-Time Team Buzzers
-
-[![Cisco Live 2025](https://img.shields.io/badge/Cisco%20Live-2025-049fd9?style=for-the-badge&logo=cisco)](https://www.ciscolive.com)
-[![CCNP](https://img.shields.io/badge/CCNP-AUTOCOR-green?style=for-the-badge)](https://www.cisco.com/c/en/us/training-events/training-certifications/certifications/professional/ccnp-enterprise.html)
-[![Status](https://img.shields.io/badge/Status-Live-success?style=for-the-badge)](https://kiskander.github.io/autocor-jeopardy/)
-
-</div>
+A real-time, browser-based quiz game with live team buzzers — powered by MQTT over WebSockets. Designed for interactive sessions, workshops, and events. Deploy to GitHub Pages and run with zero backend.
 
 ---
 
-## 🚀 Quick Start
+## Deployment
 
-### 🎯 Play the Game
+This project runs entirely on **GitHub Pages** as static files. No server, no database.
 
-| Link | Description |
-|------|-------------|
-| [**Main Game Board**](https://kiskander.github.io/autocor-jeopardy/autocor_jeopardy.html) | Display on projector for audience |
-| [**Answer Key**](https://kiskander.github.io/autocor-jeopardy/answer-key.html) | Private display for host (password protected) |
-| [**Test Page**](https://kiskander.github.io/autocor-jeopardy/test-buzzers.html) | Pre-session testing & debugging |
+### Setup
 
-### 📱 Team Buzzer URLs (Convert to QR Codes)
+1. Fork or clone this repo
+2. Enable GitHub Pages (Settings > Pages > Source: main branch)
+3. Open `setup.html` on your deployed site to configure teams and branding
+4. Share buzzer URLs (or QR codes) with participants
+
+### Pages
+
+| Page | URL | Purpose |
+|------|-----|---------|
+| Game Board | `autocor_jeopardy.html` | Projector display for the audience |
+| Buzzer | `buzzer.html?team=<id>` | Player phones — one per team |
+| Answer Key | `answer-key.html` | Private host screen (password protected) |
+| Setup | `setup.html` | Configure teams, branding, Final Jeopardy |
+| Test Buzzers | `test-buzzers.html` | Pre-session testing and MQTT debug |
+
+---
+
+## Configuration
+
+All configuration is managed through the **Setup page** (`setup.html`) — no code changes needed between deployments.
+
+### Teams Tab
+
+- Add or remove teams (supports any number)
+- Set team name, ID, primary/secondary colors
+- Upload team images or use auto-generated initials as icons
+- Drag to reorder
+
+### Branding Tab
+
+- Change the header title (default: "What's The Question?")
+- Upload or link a custom logo
+- Enable/disable Final Jeopardy
+- Edit the Final Jeopardy question and answer
+
+### How Config Works
+
+Configuration is published as a **retained MQTT message**. When you click "Save & Publish Live" in the setup page:
+
+- All connected pages (game board, buzzers, answer key) update instantly
+- New clients that connect later receive the retained config automatically
+- No redeploy required for config changes
+
+Fallback: pages load `config.json` from the repo on startup if no MQTT config is available yet.
+
+---
+
+## Multi-Deployment Support
+
+The same code can be deployed to multiple GitHub repos/pages without interference. MQTT topics are automatically namespaced by hostname:
 
 ```
-🔴 Team Ansible:   https://kiskander.github.io/autocor-jeopardy/buzzer.html?team=ansible
-🟣 Team Terraform: https://kiskander.github.io/autocor-jeopardy/buzzer.html?team=terraform
-🔵 Team Python:    https://kiskander.github.io/autocor-jeopardy/buzzer.html?team=python
-🟢 Team YANG:      https://kiskander.github.io/autocor-jeopardy/buzzer.html?team=yang
-🟠 Team pyATS:     https://kiskander.github.io/autocor-jeopardy/buzzer.html?team=pyats
+Deployment: user-a.github.io  →  topics: jeopardy/user-a-github-io/buzz
+Deployment: user-b.github.io  →  topics: jeopardy/user-b-github-io/buzz
+```
+
+Each deployment is fully isolated with zero configuration.
+
+---
+
+## Game Flow
+
+1. Host opens the game board on projector
+2. Teams scan QR codes to open their buzzer pages on phones
+3. Host clicks a dollar value tile to open a question
+4. Teams race to buzz in — first buzz locks all others
+5. Host judges the answer:
+   - **Correct**: points added, tile consumed, answer revealed
+   - **Wrong**: points deducted, other teams can steal
+6. If host closes a question without anyone answering, the tile stays active
+7. Optional Final Jeopardy round at the end
+
+---
+
+## Question Data
+
+Questions live in JSON files under `data/`:
+
+```
+data/session_1.json   (default)
+data/session_2.json
+data/session_3.json
+```
+
+Load a specific session via URL parameter: `autocor_jeopardy.html?board=session_2`
+
+### Session JSON Format
+
+```json
+{
+  "finalJeopardy": {
+    "q": "Your Final Jeopardy question",
+    "a": "What is the answer?"
+  },
+  "categories": [
+    {
+      "name": "Category Name",
+      "questions": [
+        { "q": "Question text", "a": "Answer text" },
+        { "q": "...", "a": "..." }
+      ]
+    }
+  ]
+}
+```
+
+The `finalJeopardy` field is optional. If present, it provides the default Final Jeopardy question (overridable from the setup page). The legacy format (plain array of categories) is also supported.
+
+---
+
+## Technical Architecture
+
+| Layer | Technology |
+|-------|-----------|
+| Frontend | Plain HTML, CSS, JavaScript |
+| Real-time | MQTT over WebSocket (WSS) via mqtt.js |
+| Broker | `wss://broker.emqx.io:8084/mqtt` (public) |
+| Hosting | GitHub Pages (static files) |
+| Config | Retained MQTT messages + config.json fallback |
+
+### MQTT Topics (per deployment)
+
+```
+jeopardy/<instance-id>/buzz       Team buzzer presses
+jeopardy/<instance-id>/control    Reset/disable buzzer commands
+jeopardy/<instance-id>/question   Question/answer sync to answer key
+jeopardy/<instance-id>/config     Live configuration (retained)
+```
+
+### Why It Works on Enterprise WiFi
+
+- Uses WebSocket Secure on port 443 (HTTPS standard)
+- No special ports, no VPN needed
+- Public MQTT broker handles all real-time communication
+- Pure client-side — no backend to configure or maintain
+
+---
+
+## File Structure
+
+```
+.
+├── autocor_jeopardy.html    Main game board
+├── buzzer.html              Team buzzer (phone)
+├── answer-key.html          Host answer display
+├── setup.html               Configuration UI
+├── test-buzzers.html        Pre-session testing
+├── config.json              Default configuration
+├── data/
+│   ├── session_1.json       Question set 1
+│   ├── session_2.json       Question set 2
+│   └── session_3.json       Question set 3
+└── images/
+    ├── learn-with-cisco.png Default logo
+    └── teams/               Optional team logos
 ```
 
 ---
 
-## ✨ Features
+## Local Development
 
-<table>
-<tr>
-<td width="50%">
-
-### 🎮 Real-Time Buzzers
-- Team members buzz from phones
-- First buzz locks all others
-- Wrong answers enable steals
-- MQTT over WebSockets (port 443)
-
-### 🎯 Smart Scoring
-- Quick ✓/✗ buttons for judging
-- Judge before revealing answer
-- Auto-reset between questions
-- Manual override controls
-
-</td>
-<td width="50%">
-
-### 🔒 Private Answer Key
-- Password protected display
-- Real-time question sync
-- Large, easy-to-read answers
-- Shows buzzing team
-
-### 🎨 Professional Design
-- Cisco Live 2025 branding
-- Custom team icons
-- Buzz sound effects
-- Mobile-friendly interface
-
-</td>
-</tr>
-</table>
-
----
-
-## 🎯 Game Flow
-
-```mermaid
-graph LR
-    A[Host Clicks Question] --> B[Question Opens]
-    B --> C[Teams Race to Buzz]
-    C --> D{First Buzz}
-    D --> E[Team Name Shows]
-    E --> F[Host Judges]
-    F --> G{Correct?}
-    G -->|✓ Yes| H[Points Added<br/>Answer Reveals]
-    G -->|✗ No| I[Points Deducted<br/>Other Teams Can Buzz]
-    I --> C
-    H --> J[Host Closes<br/>Next Question]
+```bash
+python3 -m http.server 8000
 ```
 
----
-
-## 🛠️ Technical Architecture
-
-### Stack
-- **Frontend**: Pure HTML/CSS/JavaScript
-- **Communication**: MQTT over WebSockets (WSS)
-- **Hosting**: GitHub Pages (static)
-- **Broker**: `wss://test.mosquitto.org:8081` (public)
-
-### MQTT Topics
-```
-jeopardy/buzz     → Team buzzer presses
-jeopardy/control  → Reset/disable commands
-jeopardy/question → Question/answer sync to answer key
-```
-
-### Why It Works Everywhere
-- ✅ No backend server required
-- ✅ Uses port 443 (HTTPS standard)
-- ✅ Works on enterprise WiFi
-- ✅ Pure client-side architecture
-- ✅ Public MQTT broker handles all real-time communication
+Then open `http://localhost:8000/autocor_jeopardy.html`
 
 ---
 
-## 📋 Session Information
+## Testing Checklist
 
-**Session**: IBOCRT-2775 - Level Up Your CCNP Automation Skills – Jeopardy Style  
-**Type**: Interactive Breakout Session  
-**Level**: Intermediate  
-**Topics**: DevOps, Automation & Orchestration, Programmability
-
-### Categories
-- 🌐 Network Automation
-- 🏗️ Infrastructure as Code
-- ⚙️ Operations
-- 🤖 AI in Automation
-
----
-
-## 🧪 Testing Checklist
-
-- [ ] Main board loads with Cisco Live branding
-- [ ] Answer key accepts password (`REDACTED`)
-- [ ] Test page shows all 5 team buzzers
-- [ ] Buzz sound plays when testing
-- [ ] Buzzer indicator shows on main board
-- [ ] Answer syncs to answer key page
-- [ ] Wrong answer locks out team
-- [ ] Other teams can buzz after wrong answer
-- [ ] Correct answer reveals and allows closing
-- [ ] Manual override buttons work
-
----
-
-## 🎓 Teams
-
-| Team | Icon | Color | Technology |
-|------|------|-------|------------|
-| **Ansible** | 🔴 A | Red | Configuration Management |
-| **Terraform** | 🟣 T | Purple | Infrastructure as Code |
-| **Python** | 🔵 P | Blue/Yellow | Programming Language |
-| **YANG** | 🟢 🌳 | Green | Data Modeling |
-| **pyATS** | 🟠 🧪 | Orange | Testing Framework |
-
----
-
-## 📚 Documentation
-
-- [**CHANGELOG.md**](CHANGELOG.md) - Detailed feature list and changes
-- [**GitHub Repo**](https://github.com/kiskander/autocor-jeopardy) - Source code
-- **Branch**: `alex-trebek-rip` - Active development branch
-
----
-
-## 🤝 Contributing
-
-This project is for Cisco Live session IBOCRT-2775. For questions or issues:
-- Open an issue on GitHub
-- Contact the session facilitator
-
----
-
-## 📄 License
-
-Created for Cisco Live 2025 - CCNP AUTOCOR Certification Prep
-
----
-
-<div align="center">
-
-### 🎉 Ready to Play?
-
-**[Launch Game Board →](https://kiskander.github.io/autocor-jeopardy/autocor_jeopardy.html)**
-
----
-
-Made with ❤️ for Cisco Live 2025 | Session IBOCRT-2775
-
-</div>
+- [ ] Setup page connects to MQTT (green indicator)
+- [ ] Teams appear on game board after publishing config
+- [ ] Buzzer pages show correct team info
+- [ ] First buzz locks all other buzzers
+- [ ] Wrong answer allows steal (other teams can buzz)
+- [ ] Correct answer disables tile and reveals answer
+- [ ] Closing without answering keeps tile active
+- [ ] Answer key syncs question and shows buzzing team
+- [ ] Final Jeopardy button respects toggle setting
+- [ ] Logo and title update live from setup page
