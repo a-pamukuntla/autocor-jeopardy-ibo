@@ -19,7 +19,7 @@ This project runs entirely on **GitHub Pages** as static files. No server, no da
 
 | Page | URL | Purpose |
 |------|-----|---------|
-| Game Board | `autocor_jeopardy.html` | Projector display for the audience |
+| Game Board | `game.html` | Projector display for the audience |
 | Buzzer | `buzzer.html?team=<id>` | Player phones — one per team |
 | Answer Key | `answer-key.html` | Private host screen (password protected) |
 | Setup | `setup.html` | Configure teams, branding, Final Jeopardy |
@@ -94,7 +94,7 @@ data/session_2.json
 data/session_3.json
 ```
 
-Load a specific session via URL parameter: `autocor_jeopardy.html?board=session_2`
+Load a specific session via URL parameter: `game.html?board=session_2`
 
 ### Session JSON Format
 
@@ -152,7 +152,7 @@ jeopardy/<instance-id>/config     Live configuration (retained)
 
 ```
 .
-├── autocor_jeopardy.html    Main game board
+├── game.html    Main game board
 ├── buzzer.html              Team buzzer (phone)
 ├── answer-key.html          Host answer display
 ├── setup.html               Configuration UI
@@ -175,7 +175,7 @@ jeopardy/<instance-id>/config     Live configuration (retained)
 python3 -m http.server 8000
 ```
 
-Then open `http://localhost:8000/autocor_jeopardy.html`
+Then open `http://localhost:8000/game.html`
 
 ---
 
