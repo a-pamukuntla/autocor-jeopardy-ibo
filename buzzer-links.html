@@ -136,6 +136,7 @@
     </div>
 
     <script src="showtime-stars.js"></script>
+    <script src="https://unpkg.com/mqtt@5.3.5/dist/mqtt.min.js"></script>
     <script src="https://unpkg.com/qrcode@1.5.4/build/qrcode.min.js"></script>
     <script>
         buildStarfield(40);
@@ -157,11 +158,48 @@
         async function init() {
             try {
                 const res = await fetch('./config.json');
+                if (!res.ok) throw new Error(`HTTP ${res.status}`);
                 const config = await res.json();
                 renderTeams(config.teams);
             } catch (e) {
-                document.getElementById('team-grid').innerHTML = '<p style="color:var(--bad);text-align:center;">Failed to load config.json</p>';
+                console.warn('config.json fetch failed, trying MQTT retained config...', e);
+                loadFromMqtt();
             }
+        }
+
+        function loadFromMqtt() {
+            const MQTT_BROKER = 'wss://broker.emqx.io:8084/mqtt';
+            const INSTANCE_ID = window.location.host.replace(/[^a-zA-Z0-9]/g, '-');
+            const TOPIC_CONFIG = `jeopardy/${INSTANCE_ID}/config`;
+
+            const client = mqtt.connect(MQTT_BROKER, {
+                clientId: 'buzzer-links-' + Math.random().toString(36).slice(2, 8)
+            });
+
+            const grid = document.getElementById('team-grid');
+            grid.innerHTML = '<p style="color:var(--ink-mute);text-align:center;">Connecting to live config…</p>';
+
+            let timeout = setTimeout(() => {
+                grid.innerHTML = '<p style="color:var(--bad);text-align:center;">No config found. Open the <a href="setup.html" style="color:var(--gold)">Setup page</a> and publish your config first.</p>';
+                client.end();
+            }, 8000);
+
+            client.on('connect', () => {
+                client.subscribe(TOPIC_CONFIG);
+            });
+
+            client.on('message', (topic, payload) => {
+                if (topic === TOPIC_CONFIG) {
+                    clearTimeout(timeout);
+                    try {
+                        const config = JSON.parse(payload.toString());
+                        renderTeams(config.teams);
+                    } catch (e) {
+                        grid.innerHTML = '<p style="color:var(--bad);text-align:center;">Invalid config received.</p>';
+                    }
+                    client.end();
+                }
+            });
         }
 
         function renderTeams(teams) {
