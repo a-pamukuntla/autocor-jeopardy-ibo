@@ -416,6 +416,10 @@
                 <div class="branding-fields">
                     <div class="branding-row">
                         <div class="field-group">
+                            <label class="show-label">Eyebrow Text (small text above title)</label>
+                            <input type="text" id="brand-eyebrow" class="show-input" value="" placeholder="Play and prove your tech skills" oninput="updateBranding()">
+                        </div>
+                        <div class="field-group">
                             <label class="show-label">Header Title</label>
                             <input type="text" id="brand-title" class="show-input" value="" placeholder="What's The Question?" oninput="updateBranding()">
                         </div>
@@ -468,7 +472,10 @@
                     <div class="banner-preview-header">
                         <div class="banner-preview-left">
                             <img id="banner-preview-logo" src="" alt="Logo" style="display:none;">
-                            <h2 id="banner-preview-title">What's The Question?</h2>
+                            <div>
+                                <div id="banner-preview-eyebrow" style="font-size:0.55rem;color:var(--gold);letter-spacing:0.22em;text-transform:uppercase;font-weight:700;margin-bottom:3px;">Play and prove your tech skills</div>
+                                <h2 id="banner-preview-title">What's The Question?</h2>
+                            </div>
                         </div>
                         <div class="banner-preview-status">● Live</div>
                     </div>
@@ -507,7 +514,7 @@
 
         let mqttClient = null;
         let teams = [];
-        let branding = { title: "What's The Question?", logo: '', showFinalJeopardy: true, finalQuestion: '', finalAnswer: '' };
+        let branding = { eyebrow: 'Play and prove your tech skills', title: "What's The Question?", logo: '', showFinalJeopardy: true, finalQuestion: '', finalAnswer: '' };
         let editingTeamIndex = null;
 
         function setMqttStatus(state, text) {
@@ -585,6 +592,7 @@
         function render() { renderList(); renderPreview(); updateEmptyState(); }
 
         function renderBrandingForm() {
+            document.getElementById('brand-eyebrow').value = branding.eyebrow || '';
             document.getElementById('brand-title').value = branding.title || '';
             document.getElementById('brand-logo-path').value = branding.logo && !branding.logo.startsWith('data:') ? branding.logo : '';
             const finalEnabled = branding.showFinalJeopardy !== false;
@@ -602,6 +610,7 @@
         }
 
         function updateBranding() {
+            branding.eyebrow = document.getElementById('brand-eyebrow').value;
             branding.title = document.getElementById('brand-title').value;
             const pathVal = document.getElementById('brand-logo-path').value.trim();
             if (pathVal && !branding.logo.startsWith('data:')) branding.logo = pathVal;
@@ -609,9 +618,11 @@
         }
 
         function updateBannerPreview() {
+            const eyebrowEl = document.getElementById('banner-preview-eyebrow');
             const titleEl = document.getElementById('banner-preview-title');
             const logoEl = document.getElementById('banner-preview-logo');
-            titleEl.textContent = branding.title || 'JEOPARDY';
+            eyebrowEl.textContent = branding.eyebrow || '';
+            titleEl.textContent = branding.title || "What's The Question?";
             if (branding.logo) { logoEl.src = branding.logo; logoEl.style.display = 'block'; }
             else logoEl.style.display = 'none';
         }
@@ -780,7 +791,8 @@
         function buildConfig() {
             return {
                 branding: {
-                    title: branding.title || 'JEOPARDY',
+                    eyebrow: branding.eyebrow || '',
+                    title: branding.title || "What's The Question?",
                     logo: branding.logo || '',
                     showFinalJeopardy: branding.showFinalJeopardy !== false,
                     finalQuestion: branding.finalQuestion || '',

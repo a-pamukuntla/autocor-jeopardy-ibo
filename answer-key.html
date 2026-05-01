@@ -377,8 +377,9 @@
         function applyBranding(b) {
             const logo = document.getElementById('cisco-logo');
             const title = document.querySelector('.show-title');
+            const eyebrow = document.querySelector('.show-eyebrow');
+            if (b.eyebrow && eyebrow) eyebrow.textContent = b.eyebrow;
             if (b.title) {
-                // keep the badge intact
                 const badge = title.querySelector('.show-badge');
                 title.firstChild && (title.firstChild.nodeValue = b.title);
                 if (!title.firstChild.nodeValue) title.insertBefore(document.createTextNode(b.title), badge);

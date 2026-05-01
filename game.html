@@ -1007,6 +1007,8 @@
     function applyBranding(b) {
         const logo = document.getElementById('cisco-logo');
         const title = document.querySelector('.header-left h1');
+        const eyebrow = document.querySelector('.header-eyebrow');
+        if (b.eyebrow && eyebrow) eyebrow.textContent = b.eyebrow;
         if (b.title) title.textContent = b.title;
         if (b.logo) {
             logo.src = b.logo;
