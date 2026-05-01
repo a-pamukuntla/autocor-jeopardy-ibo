@@ -60,42 +60,38 @@
             margin-bottom: 14px;
         }
 
-        .page-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 14px;
-        }
-        .page-card {
+        .page-nav {
             display: flex;
-            flex-direction: column;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+        }
+        .page-link {
+            display: inline-flex;
             align-items: center;
-            text-align: center;
-            padding: 22px 16px;
-            border-radius: 14px;
-            background: linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02));
+            gap: 8px;
+            padding: 10px 18px;
+            border-radius: 10px;
+            background: rgba(255,255,255,0.04);
             border: 1px solid var(--line);
             text-decoration: none;
-            transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+            transition: transform 0.15s ease, border-color 0.2s ease, box-shadow 0.2s ease;
         }
-        .page-card:hover {
-            transform: translateY(-3px);
+        .page-link:hover {
+            transform: translateY(-2px);
             border-color: var(--gold-soft);
-            box-shadow: 0 8px 30px rgba(255,210,74,0.12);
+            box-shadow: 0 6px 20px rgba(255,210,74,0.12);
         }
-        .page-card .icon {
-            font-size: 1.8rem;
-            margin-bottom: 10px;
-        }
-        .page-card .name {
-            font-size: 0.95rem;
+        .page-link .icon { font-size: 1.1rem; }
+        .page-link .name {
+            font-size: 0.85rem;
             font-weight: 700;
             color: var(--ink);
-            margin-bottom: 4px;
         }
-        .page-card .desc {
-            font-size: 0.78rem;
+        .page-link .desc {
+            font-size: 0.7rem;
             color: var(--ink-mute);
-            line-height: 1.4;
+            margin-left: 2px;
         }
 
         .steps {
@@ -113,13 +109,12 @@
             border: 1px solid var(--line);
         }
         .step-num {
-            width: 28px;
-            height: 28px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, var(--gold), var(--gold-deep));
-            color: #1a1200;
-            font-size: 0.8rem;
-            font-weight: 800;
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            background: rgba(255,210,74,0.1);
+            border: 1px solid var(--gold-soft);
+            font-size: 1rem;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -175,31 +170,26 @@
 
         <div class="show-card anim-1">
             <div class="section-label">Pages</div>
-            <div class="page-grid">
-                <a href="game.html" class="page-card">
-                    <div class="icon">📺</div>
-                    <div class="name">Game Board</div>
-                    <div class="desc">Display on projector for the audience</div>
+            <div class="page-nav">
+                <a href="game.html" target="_blank" class="page-link">
+                    <span class="icon">📺</span>
+                    <span class="name">Game Board</span>
                 </a>
-                <a href="buzzer.html" class="page-card">
-                    <div class="icon">🔴</div>
-                    <div class="name">Buzzer</div>
-                    <div class="desc">Team phones — share via QR code</div>
+                <a href="buzzer.html" target="_blank" class="page-link">
+                    <span class="icon">🔴</span>
+                    <span class="name">Buzzer</span>
                 </a>
-                <a href="answer-key.html" class="page-card">
-                    <div class="icon">🔒</div>
-                    <div class="name">Answer Key</div>
-                    <div class="desc">Private host display (password)</div>
+                <a href="answer-key.html" target="_blank" class="page-link">
+                    <span class="icon">🔒</span>
+                    <span class="name">Answer Key</span>
                 </a>
-                <a href="setup.html" class="page-card">
-                    <div class="icon">⚙️</div>
-                    <div class="name">Setup</div>
-                    <div class="desc">Teams, branding, Final Jeopardy</div>
+                <a href="setup.html" target="_blank" class="page-link">
+                    <span class="icon">⚙️</span>
+                    <span class="name">Setup</span>
                 </a>
-                <a href="test-buzzers.html" class="page-card">
-                    <div class="icon">🧪</div>
-                    <div class="name">Test Buzzers</div>
-                    <div class="desc">Pre-session MQTT debug</div>
+                <a href="test-buzzers.html" target="_blank" class="page-link">
+                    <span class="icon">🧪</span>
+                    <span class="name">Test Buzzers</span>
                 </a>
             </div>
         </div>
@@ -208,20 +198,20 @@
             <div class="section-label">How to Host</div>
             <div class="steps">
                 <div class="step">
-                    <div class="step-num">1</div>
-                    <div class="step-text">Open the <strong>Setup</strong> page. Configure your teams and branding. Click <strong>Save &amp; Publish Live</strong>.</div>
+                    <div class="step-num">⚙️</div>
+                    <div class="step-text">Open <strong>Setup</strong>. Configure your teams and branding. Click <strong>Save &amp; Publish Live</strong>.</div>
                 </div>
                 <div class="step">
-                    <div class="step-num">2</div>
-                    <div class="step-text">Open the <strong>Game Board</strong> on the projector. Open the <strong>Answer Key</strong> on your private laptop.</div>
+                    <div class="step-num">📺</div>
+                    <div class="step-text">Open the <strong>Game Board</strong> on the projector. Open the <strong>🔒 Answer Key</strong> on your private laptop.</div>
                 </div>
                 <div class="step">
-                    <div class="step-num">3</div>
-                    <div class="step-text">Share <strong>Buzzer</strong> URLs (or QR codes) with each team. Use <strong>Test Buzzers</strong> to verify connectivity.</div>
+                    <div class="step-num">🔴</div>
+                    <div class="step-text">Share <strong>Buzzer</strong> URLs (or QR codes) with each team. Use <strong>🧪 Test Buzzers</strong> to verify connectivity first.</div>
                 </div>
                 <div class="step">
-                    <div class="step-num">4</div>
-                    <div class="step-text">Click tiles to open questions. Teams buzz in, you judge. First buzz locks everyone else. Wrong answers allow steals.</div>
+                    <div class="step-num">🎯</div>
+                    <div class="step-text">Click tiles to reveal questions. Teams buzz in, you judge. First buzz locks everyone else. Wrong answers allow steals.</div>
                 </div>
             </div>
         </div>
