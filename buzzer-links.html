@@ -157,12 +157,14 @@
 
         async function init() {
             try {
-                const res = await fetch('./config.json');
+                const res = await fetch('./config.json', { cache: 'no-cache' });
                 if (!res.ok) throw new Error(`HTTP ${res.status}`);
-                const config = await res.json();
+                const text = await res.text();
+                const config = JSON.parse(text);
+                if (!config.teams || !config.teams.length) throw new Error('No teams in config');
                 renderTeams(config.teams);
             } catch (e) {
-                console.warn('config.json fetch failed, trying MQTT retained config...', e);
+                console.warn('config.json fetch failed, trying MQTT retained config...', e.message);
                 loadFromMqtt();
             }
         }
@@ -217,15 +219,19 @@
                 </div>`;
             }).join('');
 
-            teams.forEach(team => {
-                const url = `${baseUrl}?team=${team.id}`;
-                const canvas = document.getElementById(`qr-${team.id}`);
-                QRCode.toCanvas(canvas, url, {
-                    width: 180,
-                    margin: 1,
-                    color: { dark: '#02041a', light: '#ffffff' }
+            if (typeof QRCode !== 'undefined') {
+                teams.forEach(team => {
+                    const url = `${baseUrl}?team=${team.id}`;
+                    const canvas = document.getElementById(`qr-${team.id}`);
+                    QRCode.toCanvas(canvas, url, {
+                        width: 180,
+                        margin: 1,
+                        color: { dark: '#02041a', light: '#ffffff' }
+                    });
                 });
-            });
+            } else {
+                console.error('QRCode library not loaded');
+            }
         }
 
         init();

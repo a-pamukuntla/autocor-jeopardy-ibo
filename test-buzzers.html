@@ -297,9 +297,14 @@
         }
 
         async function loadConfig() {
-            const res = await fetch('./config.json');
-            const config = await res.json();
-            applyConfig(config);
+            try {
+                const res = await fetch('./config.json', { cache: 'no-cache' });
+                if (!res.ok) throw new Error(`HTTP ${res.status}`);
+                const config = await res.json();
+                applyConfig(config);
+            } catch (e) {
+                console.warn('config.json load failed, will use MQTT config', e);
+            }
         }
 
         function renderBuzzerGrid() {
@@ -495,10 +500,12 @@
                     <button class="copy-btn" onclick="copyUrl('${id}')">Copy</button>
                 </div>`;
             }).join('');
-            Object.entries(TEAMS).forEach(([id]) => {
-                const url = `${baseUrl}?team=${id}`;
-                QRCode.toCanvas(document.getElementById(`qr-${id}`), url, { width: 128, margin: 1 });
-            });
+            if (typeof QRCode !== 'undefined') {
+                Object.entries(TEAMS).forEach(([id]) => {
+                    const url = `${baseUrl}?team=${id}`;
+                    QRCode.toCanvas(document.getElementById(`qr-${id}`), url, { width: 128, margin: 1 });
+                });
+            }
         }
 
         async function start() {
