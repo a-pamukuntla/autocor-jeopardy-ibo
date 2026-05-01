@@ -248,15 +248,16 @@
         </div>
 
         <div class="show-card show-card--gold urls-section">
-            <div class="section-title">📱 Team Buzzer URLs</div>
+            <div class="section-title">📱 Team Buzzer URLs &amp; QR Codes</div>
             <p style="color: var(--ink-mute); margin-bottom: 14px; font-size: 0.88rem;">
-                Share these URLs or convert them to QR codes for each team
+                Share these URLs or scan QR codes to connect each team's buzzer
             </p>
             <div class="url-list" id="url-list"></div>
         </div>
     </div>
 
     <script src="showtime-stars.js"></script>
+    <script src="https://unpkg.com/qrcode@1.5.4/build/qrcode.min.js"></script>
     <script src="https://unpkg.com/mqtt@5.3.5/dist/mqtt.min.js"></script>
     <script>
         buildStarfield(50);
@@ -489,10 +490,15 @@
             urlList.innerHTML = Object.entries(TEAMS).map(([id, team]) => {
                 const url = `${baseUrl}?team=${id}`;
                 return `<div class="url-item" style="border-color: ${team.color};">
+                    <canvas id="qr-${id}" style="width:64px;height:64px;border-radius:6px;background:white;padding:4px;flex-shrink:0;"></canvas>
                     <span class="url-text" id="url-${id}">${url}</span>
                     <button class="copy-btn" onclick="copyUrl('${id}')">Copy</button>
                 </div>`;
             }).join('');
+            Object.entries(TEAMS).forEach(([id]) => {
+                const url = `${baseUrl}?team=${id}`;
+                QRCode.toCanvas(document.getElementById(`qr-${id}`), url, { width: 128, margin: 1 });
+            });
         }
 
         async function start() {
