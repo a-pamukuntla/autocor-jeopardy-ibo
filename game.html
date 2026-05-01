@@ -1025,7 +1025,7 @@
     }
 
     async function loadConfig() {
-        const res = await fetch('./config.json');
+        const res = await fetch('./config.json', { cache: 'no-cache' });
         const config = await res.json();
         applyConfig(config);
     }
@@ -1048,25 +1048,33 @@
     let audioContext = null; // Reusable audio context
     let currentTile = null; // Track the active tile for deferred disabling
 
+    let initRendered = false;
+
     async function init() {
         buildStarfield();
         const urlParams = new URLSearchParams(window.location.search);
         const board = urlParams.get('board') || 'session_1';
         try {
-            await loadConfig();
-            Object.keys(TEAMS).forEach(id => { scores[id] = 0; });
-            const res = await fetch(`./data/${board}.json`);
-            const boardData = await res.json();
+            const [, boardRes] = await Promise.all([
+                loadConfig(),
+                fetch(`./data/${board}.json`)
+            ]);
+            const boardData = await boardRes.json();
             if (boardData.finalJeopardy) {
                 if (!finalJeopardyQuestion) finalJeopardyQuestion = boardData.finalJeopardy.q || '';
                 if (!finalJeopardyAnswer) finalJeopardyAnswer = boardData.finalJeopardy.a || '';
             }
             categories = Array.isArray(boardData) ? boardData : boardData.categories || boardData;
-            renderBoard();
-            renderScoreboard();
             connectMQTT();
             bindTweaksPanel();
             applyAllTweaks();
+            await new Promise(resolve => setTimeout(resolve, 600));
+            if (!initRendered) {
+                Object.keys(TEAMS).forEach(id => { scores[id] = 0; });
+                renderBoard();
+                renderScoreboard();
+                initRendered = true;
+            }
         } catch (e) {
             console.error(e);
             document.getElementById('game-board').innerHTML = "<h2>Error loading config or game data. Check config.json and /data/ folder.</h2>";
@@ -1156,7 +1164,8 @@
                             if (!(id in scores)) scores[id] = 0;
                         });
                         renderScoreboard();
-                        renderBoard();
+                        if (!initRendered) renderBoard();
+                        initRendered = true;
                     } catch (e) {}
                     return;
                 }

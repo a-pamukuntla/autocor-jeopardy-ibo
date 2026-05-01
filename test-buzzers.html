@@ -364,6 +364,7 @@
                             applyConfig(config);
                             renderBuzzerGrid();
                             renderUrls();
+                            initRendered = true;
                             log('🔄 Config updated live', 'system');
                         } catch (e) {}
                         return;
@@ -508,11 +509,17 @@
             }
         }
 
+        let initRendered = false;
+
         async function start() {
             await loadConfig();
-            renderBuzzerGrid();
-            renderUrls();
             connectMQTT();
+            await new Promise(resolve => setTimeout(resolve, 600));
+            if (!initRendered) {
+                renderBuzzerGrid();
+                renderUrls();
+                initRendered = true;
+            }
         }
         start();
     </script>
