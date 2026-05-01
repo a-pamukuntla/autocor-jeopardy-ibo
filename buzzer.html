@@ -2,135 +2,375 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Jeopardy Buzzer</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="theme-color" content="#02041a">
+    <title>Jeopardy Buzzer — Showtime</title>
+    <link rel="stylesheet" href="showtime-shared.css">
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
-            font-family: 'Segoe UI', sans-serif;
-            background: linear-gradient(135deg, #000033 0%, #000055 100%);
-            color: white;
-            min-height: 100vh;
+            min-height: 100dvh;
             display: flex;
             flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
+            padding: 18px;
+            padding-top: max(18px, env(safe-area-inset-top));
+            padding-bottom: max(18px, env(safe-area-inset-bottom));
+            overscroll-behavior: contain;
         }
         .container {
+            position: relative;
+            z-index: 1;
             width: 100%;
-            max-width: 400px;
-            text-align: center;
+            max-width: 460px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            flex: 1;
         }
-        h1 {
-            color: gold;
-            margin-bottom: 30px;
-            font-size: 1.8rem;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+
+        /* eyebrow + status */
+        .top-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            animation: show-fade-up 0.5s ease-out both;
         }
-        .status {
-            background: rgba(255,255,255,0.1);
-            padding: 10px;
+        .brand {
+            display: flex; align-items: center; gap: 10px;
+        }
+        .brand-mark {
+            width: 30px; height: 30px;
             border-radius: 8px;
-            margin-bottom: 20px;
-            font-size: 0.9rem;
-        }
-        .status.connected { border: 2px solid #28a745; }
-        .status.disconnected { border: 2px solid #dc3545; }
-        .team-info {
-            background: rgba(255,255,255,0.1);
-            border: 3px solid gold;
-            border-radius: 15px;
-            padding: 25px;
-            margin-bottom: 30px;
-            text-align: center;
-        }
-        .team-info svg {
-            width: 80px;
-            height: 80px;
-            margin-bottom: 15px;
-        }
-        .team-info h2 {
-            color: gold;
-            font-size: 1.8rem;
-            margin-bottom: 10px;
-        }
-        .team-info p {
-            color: #ccc;
+            background: linear-gradient(135deg, var(--gold) 0%, var(--gold-deep) 100%);
+            display: flex; align-items: center; justify-content: center;
             font-size: 1rem;
+            box-shadow: 0 4px 14px rgba(255,210,74,0.35), inset 0 1px 0 rgba(255,255,255,0.4);
+        }
+        .brand-text {
+            display: flex; flex-direction: column; line-height: 1;
+        }
+        .brand-eyebrow {
+            font-size: 0.55rem;
+            letter-spacing: 0.22em;
+            text-transform: uppercase;
+            color: var(--gold);
+            font-weight: 700;
+            opacity: 0.9;
+            margin-bottom: 3px;
+        }
+        .brand-title {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: var(--ink);
+            letter-spacing: 0.04em;
+        }
+
+        /* ====== TEAM CARD ====== */
+        .team-card {
+            position: relative;
+            border-radius: 18px;
+            padding: 24px 22px 22px;
+            text-align: center;
+            background: linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02));
+            border: 1.5px solid var(--gold-soft);
+            box-shadow: 0 14px 40px rgba(0,0,0,0.45), 0 0 30px rgba(255,210,74,0.1), inset 0 1px 0 rgba(255,210,74,0.18);
+            backdrop-filter: blur(6px);
+            overflow: hidden;
+            animation: show-pop 0.55s cubic-bezier(0.2, 0.9, 0.3, 1.2) both 0.05s;
+        }
+        /* gold corner glints */
+        .team-card::before, .team-card::after {
+            content: '';
+            position: absolute;
+            width: 40px; height: 40px;
+            border: 2px solid var(--gold);
+            opacity: 0.7;
+            box-shadow: 0 0 12px rgba(255, 210, 74, 0.5);
+        }
+        .team-card::before {
+            top: 8px; left: 8px;
+            border-right: none; border-bottom: none;
+            border-top-left-radius: 12px;
+        }
+        .team-card::after {
+            bottom: 8px; right: 8px;
+            border-left: none; border-top: none;
+            border-bottom-right-radius: 12px;
+        }
+        .team-icon-wrap {
+            width: 110px; height: 110px;
+            margin: 4px auto 14px;
+            border-radius: 50%;
+            position: relative;
+            display: flex; align-items: center; justify-content: center;
+            animation: badge-float 4.5s ease-in-out infinite;
+        }
+        @keyframes badge-float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-3px); }
+        }
+        .team-icon-wrap::before {
+            content: '';
+            position: absolute;
+            inset: -8px;
+            border-radius: 50%;
+            background: radial-gradient(circle, var(--team-color, var(--gold)) 0%, transparent 70%);
+            opacity: 0.35;
+            filter: blur(8px);
+            z-index: -1;
+            animation: badge-glow 3s ease-in-out infinite alternate;
+        }
+        @keyframes badge-glow {
+            from { opacity: 0.25; transform: scale(0.95); }
+            to { opacity: 0.5; transform: scale(1.05); }
+        }
+        .team-icon-wrap svg, .team-icon-wrap img {
+            width: 100%; height: 100%;
+            border-radius: 50%;
+            object-fit: contain;
+            filter: drop-shadow(0 6px 16px rgba(0,0,0,0.45));
+        }
+        .team-eyebrow {
+            font-size: 0.6rem;
+            letter-spacing: 0.28em;
+            text-transform: uppercase;
+            color: var(--ink-mute);
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+        .team-name {
+            color: var(--gold);
+            font-size: 1.85rem;
+            font-weight: 700;
+            letter-spacing: 0.02em;
+            line-height: 1.05;
+            text-shadow: 0 0 20px rgba(255, 210, 74, 0.35);
+            margin-bottom: 8px;
+        }
+        .team-tag {
+            color: var(--ink-dim);
+            font-size: 0.85rem;
+            line-height: 1.4;
+        }
+
+        /* ====== BUZZER ====== */
+        .buzzer-zone {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 240px;
+            padding: 12px 0;
+            animation: show-fade-up 0.6s ease-out both 0.15s;
+        }
+        .buzzer-shell {
+            position: relative;
+            width: min(82vw, 320px);
+            aspect-ratio: 1;
+        }
+        .buzzer-ring {
+            position: absolute;
+            inset: -12px;
+            border-radius: 50%;
+            border: 2px dashed var(--gold-soft);
+            opacity: 0.45;
+            animation: ring-spin 22s linear infinite;
+        }
+        @keyframes ring-spin {
+            to { transform: rotate(360deg); }
         }
         #buzzer {
+            position: absolute;
+            inset: 0;
             width: 100%;
-            height: 200px;
-            background: linear-gradient(145deg, #dc3545, #c82333);
-            border: 4px solid #fff;
+            height: 100%;
             border-radius: 50%;
-            color: white;
-            font-size: 3rem;
-            font-weight: bold;
+            border: none;
             cursor: pointer;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-            transition: all 0.2s;
-            margin-top: 20px;
+            color: white;
+            font-family: inherit;
+            font-size: 2.6rem;
+            font-weight: 900;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            text-shadow: 0 4px 0 rgba(0,0,0,0.35), 0 0 20px rgba(255,255,255,0.5);
+            background: radial-gradient(circle at 30% 25%, #ff8d9d 0%, #e02438 35%, #8b0d1d 100%);
+            box-shadow:
+                0 18px 40px rgba(220, 53, 69, 0.55),
+                0 0 60px rgba(220, 53, 69, 0.35),
+                inset 0 -10px 25px rgba(0, 0, 0, 0.45),
+                inset 0 8px 18px rgba(255, 255, 255, 0.3),
+                inset 0 0 0 4px rgba(255, 255, 255, 0.5);
+            transition: transform 0.12s ease, box-shadow 0.18s ease;
+            -webkit-tap-highlight-color: transparent;
+            user-select: none;
         }
         #buzzer:hover:not(:disabled) {
-            transform: scale(1.05);
-            box-shadow: 0 15px 40px rgba(220,53,69,0.6);
+            transform: translateY(-4px) scale(1.02);
+            box-shadow:
+                0 26px 50px rgba(220, 53, 69, 0.7),
+                0 0 80px rgba(220, 53, 69, 0.5),
+                inset 0 -10px 25px rgba(0, 0, 0, 0.45),
+                inset 0 8px 18px rgba(255, 255, 255, 0.35),
+                inset 0 0 0 4px rgba(255, 255, 255, 0.6);
         }
         #buzzer:active:not(:disabled) {
-            transform: scale(0.95);
+            transform: translateY(2px) scale(0.96);
+            box-shadow:
+                0 8px 20px rgba(220, 53, 69, 0.6),
+                inset 0 -4px 12px rgba(0, 0, 0, 0.5),
+                inset 0 4px 14px rgba(255, 255, 255, 0.25),
+                inset 0 0 0 4px rgba(255, 255, 255, 0.4);
         }
         #buzzer:disabled {
-            background: #666;
             cursor: not-allowed;
-            opacity: 0.5;
+            background: radial-gradient(circle at 30% 25%, #555a6e 0%, #2a2f42 60%, #0f1326 100%);
+            box-shadow:
+                0 8px 20px rgba(0,0,0,0.5),
+                inset 0 -8px 20px rgba(0, 0, 0, 0.5),
+                inset 0 6px 14px rgba(255, 255, 255, 0.06),
+                inset 0 0 0 3px rgba(255, 255, 255, 0.1);
+            color: rgba(255,255,255,0.45);
+            text-shadow: none;
+            font-size: 1.4rem;
+            letter-spacing: 0.18em;
         }
+        /* ready-to-buzz pulse */
+        #buzzer:not(:disabled)::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 50%;
+            box-shadow: 0 0 0 0 rgba(255, 60, 80, 0.6);
+            animation: buzz-pulse 1.6s ease-out infinite;
+            pointer-events: none;
+        }
+        @keyframes buzz-pulse {
+            0% { box-shadow: 0 0 0 0 rgba(255, 60, 80, 0.55); }
+            70% { box-shadow: 0 0 0 28px rgba(255, 60, 80, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(255, 60, 80, 0); }
+        }
+        /* shine sweep */
+        .buzzer-shell::before {
+            content: '';
+            position: absolute;
+            top: 14%; left: 22%;
+            width: 28%; height: 22%;
+            background: radial-gradient(ellipse, rgba(255,255,255,0.7) 0%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+            opacity: 0.7;
+        }
+
+        /* buzzed state */
         #buzzer.buzzed {
-            background: #28a745;
-            animation: pulse 0.5s;
+            background: radial-gradient(circle at 30% 25%, #6cf28e 0%, #28a745 40%, #0e5723 100%) !important;
+            box-shadow:
+                0 18px 40px rgba(40, 167, 69, 0.6),
+                0 0 80px rgba(80, 230, 130, 0.55),
+                inset 0 -10px 25px rgba(0, 0, 0, 0.4),
+                inset 0 8px 18px rgba(255, 255, 255, 0.35),
+                inset 0 0 0 4px rgba(255, 255, 255, 0.6) !important;
+            animation: buzz-slam 0.5s cubic-bezier(0.2, 0.9, 0.3, 1.4);
         }
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.1); }
+        @keyframes buzz-slam {
+            0% { transform: scale(0.85); }
+            55% { transform: scale(1.12); }
+            100% { transform: scale(1); }
         }
+
+        /* ====== MESSAGE / TICKER ====== */
         .message {
-            margin-top: 20px;
-            padding: 15px;
-            border-radius: 8px;
-            font-size: 1.1rem;
-            font-weight: bold;
+            min-height: 28px;
+            padding: 10px 14px;
+            border-radius: 9px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            text-align: center;
+            transition: opacity 0.3s ease;
+            opacity: 0;
+            animation: show-fade-up 0.5s ease-out both 0.25s;
         }
         .message.success {
-            background: rgba(40, 167, 69, 0.3);
-            border: 2px solid #28a745;
+            background: rgba(52, 210, 102, 0.15);
+            border: 1px solid rgba(52, 210, 102, 0.4);
+            color: var(--ok);
+            opacity: 1;
         }
         .message.info {
-            background: rgba(255, 193, 7, 0.3);
-            border: 2px solid #ffc107;
+            background: rgba(255, 193, 7, 0.12);
+            border: 1px solid rgba(255, 193, 7, 0.4);
+            color: var(--warn);
+            opacity: 1;
+        }
+        .message.error {
+            background: rgba(255, 91, 110, 0.15);
+            border: 1px solid rgba(255, 91, 110, 0.4);
+            color: var(--bad);
+            opacity: 1;
+        }
+
+        /* ====== INVALID STATE ====== */
+        .invalid-card {
+            border-color: rgba(255, 91, 110, 0.5);
+            box-shadow: 0 14px 40px rgba(0,0,0,0.45), 0 0 30px rgba(255,91,110,0.18);
+        }
+
+        /* tiny footer */
+        .foot {
+            font-size: 0.65rem;
+            text-align: center;
+            color: var(--ink-mute);
+            letter-spacing: 0.16em;
+            text-transform: uppercase;
+            padding-top: 4px;
+        }
+
+        @media (max-height: 700px) {
+            .team-icon-wrap { width: 80px; height: 80px; margin-bottom: 10px; }
+            .team-name { font-size: 1.5rem; }
+            .team-card { padding: 18px 18px 16px; }
+            #buzzer { font-size: 2.2rem; }
         }
     </style>
 </head>
 <body>
+    <div id="starfield"></div>
+
     <div class="container">
-        <h1>🎯 JEOPARDY BUZZER</h1>
-        
-        <div id="status" class="status disconnected">
-            Connecting to server...
+        <div class="top-row">
+            <div class="brand">
+                <div class="brand-mark">⚡</div>
+                <div class="brand-text">
+                    <div class="brand-eyebrow">Cisco Live</div>
+                    <div class="brand-title">Jeopardy Buzzer</div>
+                </div>
+            </div>
+            <div id="status" class="show-pill disconnected"><span class="dot"></span><span id="status-text">Connecting</span></div>
         </div>
 
-        <div id="team-info" class="team-info">
-            <!-- Team icon and name will be injected here -->
+        <div id="team-info" class="team-card">
+            <!-- team rendered here -->
         </div>
 
-        <button id="buzzer" disabled>
-            BUZZ!
-        </button>
+        <div class="buzzer-zone">
+            <div class="buzzer-shell">
+                <div class="buzzer-ring"></div>
+                <button id="buzzer" disabled>BUZZ!</button>
+            </div>
+        </div>
 
-        <div id="message"></div>
+        <div id="message" class="message"></div>
+
+        <div class="foot">Tap to buzz · First buzz wins</div>
     </div>
 
+    <script src="showtime-stars.js"></script>
     <script src="https://unpkg.com/mqtt@5.3.5/dist/mqtt.min.js"></script>
     <script>
+        buildStarfield(60);
+
         let TEAMS = {};
 
         function getInitials(name) {
@@ -139,7 +379,7 @@
 
         function generateIcon(team) {
             if (team.image) {
-                return `<img src="${team.image}" alt="${team.name}" style="width:100%;height:100%;object-fit:contain;border-radius:50%;">`;
+                return `<img src="${team.image}" alt="${team.name}">`;
             }
             const initials = getInitials(team.name);
             const fontSize = initials.length > 1 ? 36 : 50;
@@ -153,6 +393,7 @@
                 TEAMS[team.id] = {
                     name: team.name,
                     color: team.color,
+                    secondaryColor: team.secondaryColor || '#fff',
                     icon: generateIcon(team)
                 };
             });
@@ -169,41 +410,56 @@
         const TOPIC_BUZZ = `jeopardy/${INSTANCE_ID}/buzz`;
         const TOPIC_CONTROL = `jeopardy/${INSTANCE_ID}/control`;
         const TOPIC_CONFIG = `jeopardy/${INSTANCE_ID}/config`;
-        
+
         let client = null;
         let selectedTeam = null;
         let buzzerEnabled = true;
         let hasBuzzed = false;
         let currentSessionId = null;
-        let isLockedOut = false; // Locked out for current question
+        let isLockedOut = false;
 
-        // Get team from URL parameter
+        function setStatus(state, text) {
+            const el = document.getElementById('status');
+            const t = document.getElementById('status-text');
+            el.classList.remove('connected', 'disconnected');
+            el.classList.add(state);
+            t.textContent = text;
+        }
+
+        function renderTeamCard() {
+            const teamInfoEl = document.getElementById('team-info');
+            const team = TEAMS[selectedTeam];
+            teamInfoEl.classList.remove('invalid-card');
+            teamInfoEl.style.setProperty('--team-color', team.color);
+            teamInfoEl.innerHTML = `
+                <div class="team-eyebrow">Your team</div>
+                <div class="team-icon-wrap">${team.icon}</div>
+                <div class="team-name">Team ${team.name}</div>
+                <div class="team-tag">Ready to buzz in</div>
+            `;
+        }
+
         function initTeam() {
             const urlParams = new URLSearchParams(window.location.search);
             selectedTeam = urlParams.get('team');
-            
+
             if (!selectedTeam || !TEAMS[selectedTeam]) {
-                document.getElementById('team-info').innerHTML = `
-                    <h2 style="color: #dc3545;">❌ Invalid Team</h2>
-                    <p>Please scan the correct QR code for your team.</p>
+                const teamInfoEl = document.getElementById('team-info');
+                teamInfoEl.classList.add('invalid-card');
+                teamInfoEl.innerHTML = `
+                    <div class="team-eyebrow" style="color: var(--bad);">Error</div>
+                    <div class="team-name" style="color: var(--bad); text-shadow: 0 0 18px rgba(255,91,110,0.4);">Invalid Team</div>
+                    <div class="team-tag">Please scan the QR code for your team.</div>
                 `;
                 document.getElementById('buzzer').disabled = true;
                 document.getElementById('buzzer').textContent = 'INVALID URL';
                 return false;
             }
 
-            // Display team info
-            const team = TEAMS[selectedTeam];
-            document.getElementById('team-info').innerHTML = `
-                ${team.icon}
-                <h2>Team ${team.name}</h2>
-                <p>You're ready to buzz in for your team!</p>
-            `;
-            
+            renderTeamCard();
             return true;
         }
 
-        // Connect to MQTT
         function connectMQTT() {
             try {
                 client = mqtt.connect(MQTT_BROKER, {
@@ -213,63 +469,50 @@
                 });
 
                 client.on('connect', () => {
-                    document.getElementById('status').className = 'status connected';
-                    document.getElementById('status').textContent = '🟢 Connected - Ready to play!';
-                    
+                    setStatus('connected', 'Live');
+
                     client.subscribe([TOPIC_CONTROL, TOPIC_CONFIG], (err) => {
                         if (err) console.error('Subscribe error:', err);
                     });
                 });
 
                 client.on('message', (topic, message) => {
+                    const msg = message.toString();
+
                     if (topic === TOPIC_CONFIG) {
                         try {
-                            const config = JSON.parse(message.toString());
+                            const config = JSON.parse(msg);
                             applyConfig(config);
-                            if (selectedTeam && TEAMS[selectedTeam]) {
-                                const team = TEAMS[selectedTeam];
-                                document.getElementById('team-info').innerHTML = `
-                                    ${team.icon}
-                                    <h2>Team ${team.name}</h2>
-                                    <p>You're ready to buzz in for your team!</p>
-                                `;
-                            }
+                            if (selectedTeam && TEAMS[selectedTeam]) renderTeamCard();
                         } catch (e) {}
                         return;
                     }
+
                     if (topic === TOPIC_CONTROL) {
-                        const msg = message.toString();
-                        
                         try {
-                            // Try to parse as JSON (new format)
                             const data = JSON.parse(msg);
-                            
+
                             if (data.action === 'RESET') {
-                                // Check if this is a new question (different sessionId)
-                                const isNewQuestion = !currentSessionId || data.sessionId !== currentSessionId;
+                                const isNewQuestion = data.sessionId !== currentSessionId;
                                 currentSessionId = data.sessionId;
-                                
+
                                 if (isNewQuestion) {
-                                    // Full reset for new question
                                     buzzerEnabled = true;
                                     hasBuzzed = false;
                                     isLockedOut = false;
                                     updateBuzzerState();
-                                    showMessage('New question - Ready to buzz!', 'info');
+                                    showMessage('New question — ready to buzz!', 'info');
                                 } else {
-                                    // Selective reset - check if we're locked out
                                     if (data.lockedTeams && data.lockedTeams.includes(selectedTeam)) {
-                                        // We answered wrong, stay locked
                                         isLockedOut = true;
                                         buzzerEnabled = false;
                                         updateBuzzerState();
-                                        showMessage('You answered wrong - locked out for this question', 'info');
+                                        showMessage('Wrong answer — locked out for this question', 'info');
                                     } else {
-                                        // We can buzz again
                                         buzzerEnabled = true;
                                         hasBuzzed = false;
                                         updateBuzzerState();
-                                        showMessage('Other team wrong - you can buzz!', 'info');
+                                        showMessage('Other team wrong — you can buzz!', 'info');
                                     }
                                 }
                             } else if (data.action === 'DISABLE') {
@@ -277,13 +520,13 @@
                                 updateBuzzerState();
                             }
                         } catch (e) {
-                            // Fallback for old string format (backward compatibility)
+                            // backward-compat plain-text
                             if (msg === 'RESET') {
                                 buzzerEnabled = true;
                                 hasBuzzed = false;
                                 isLockedOut = false;
                                 updateBuzzerState();
-                                showMessage('Buzzer reset - Ready for next question!', 'info');
+                                showMessage('Buzzer reset — ready for next question!', 'info');
                             } else if (msg === 'DISABLE') {
                                 buzzerEnabled = false;
                                 updateBuzzerState();
@@ -292,30 +535,24 @@
                     }
                 });
 
-                client.on('error', (err) => {
-                    console.error('MQTT Error:', err);
-                    document.getElementById('status').className = 'status disconnected';
-                    document.getElementById('status').textContent = '🔴 Connection error';
-                });
-
-                client.on('offline', () => {
-                    document.getElementById('status').className = 'status disconnected';
-                    document.getElementById('status').textContent = '🔴 Offline - Reconnecting...';
-                });
+                client.on('error', () => setStatus('disconnected', 'Error'));
+                client.on('offline', () => setStatus('disconnected', 'Offline'));
 
             } catch (err) {
                 console.error('Connection failed:', err);
-                document.getElementById('status').textContent = '🔴 Failed to connect';
+                setStatus('disconnected', 'Failed');
             }
         }
 
-        // Buzzer click
         document.getElementById('buzzer').addEventListener('click', () => {
             if (!buzzerEnabled || hasBuzzed) return;
 
             const buzzerBtn = document.getElementById('buzzer');
             buzzerBtn.classList.add('buzzed');
-            
+
+            // tactile feedback
+            if (navigator.vibrate) navigator.vibrate(80);
+
             const payload = JSON.stringify({
                 team: selectedTeam,
                 timestamp: Date.now()
@@ -323,8 +560,8 @@
 
             client.publish(TOPIC_BUZZ, payload, { qos: 1 }, (err) => {
                 if (err) {
-                    console.error('Publish error:', err);
                     buzzerBtn.classList.remove('buzzed');
+                    showMessage('Failed — try again', 'error');
                 } else {
                     hasBuzzed = true;
                     buzzerEnabled = false;
@@ -337,14 +574,14 @@
         function updateBuzzerState() {
             const buzzer = document.getElementById('buzzer');
             buzzer.disabled = !selectedTeam || !buzzerEnabled || hasBuzzed || isLockedOut;
-            
+
             if (isLockedOut) {
                 buzzer.textContent = 'LOCKED OUT';
                 buzzer.classList.remove('buzzed');
             } else if (hasBuzzed) {
                 buzzer.textContent = 'BUZZED!';
             } else if (!buzzerEnabled) {
-                buzzer.textContent = 'LOCKED';
+                buzzer.textContent = 'WAITING';
                 buzzer.classList.remove('buzzed');
             } else {
                 buzzer.textContent = 'BUZZ!';
@@ -352,23 +589,32 @@
             }
         }
 
+        let msgTimer = null;
         function showMessage(text, type) {
-            const msgDiv = document.getElementById('message');
-            msgDiv.textContent = text;
-            msgDiv.className = `message ${type}`;
-            setTimeout(() => {
-                msgDiv.textContent = '';
-                msgDiv.className = 'message';
-            }, 3000);
+            const el = document.getElementById('message');
+            el.textContent = text;
+            el.className = `message ${type}`;
+            clearTimeout(msgTimer);
+            msgTimer = setTimeout(() => { el.textContent = ''; el.className = 'message'; }, 3500);
         }
 
         function getTeamName(team) {
             return TEAMS[team] ? TEAMS[team].name : team;
         }
 
-        // Initialize
         async function start() {
-            await loadConfig();
+            try {
+                await loadConfig();
+            } catch (e) {
+                setStatus('disconnected', 'Config error');
+                document.getElementById('team-info').classList.add('invalid-card');
+                document.getElementById('team-info').innerHTML = `
+                    <div class="team-eyebrow" style="color: var(--bad);">Error</div>
+                    <div class="team-name" style="color: var(--bad);">Config failed</div>
+                    <div class="team-tag">Could not load config.json</div>
+                `;
+                return;
+            }
             if (initTeam()) {
                 connectMQTT();
                 updateBuzzerState();

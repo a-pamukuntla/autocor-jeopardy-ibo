@@ -3,287 +3,348 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Answer Key - What's The Question?</title>
+    <title>Answer Key — Showtime</title>
+    <link rel="stylesheet" href="showtime-shared.css">
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
-            font-family: 'Segoe UI', sans-serif;
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-            color: white;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
         }
-        
-        /* Login Screen */
+
+        /* ===== LOGIN ===== */
         #login-screen {
+            position: relative;
+            z-index: 1;
+            flex: 1;
             display: flex;
-            justify-content: center;
             align-items: center;
-            min-height: 100vh;
-            padding: 20px;
+            justify-content: center;
+            padding: 24px;
         }
-        #login-box {
-            background: rgba(255,255,255,0.1);
-            border: 2px solid #049fd9;
-            border-radius: 15px;
-            padding: 40px;
-            max-width: 400px;
+        .login-card {
             width: 100%;
+            max-width: 420px;
+            padding: 36px 32px;
             text-align: center;
+            position: relative;
+            animation: show-pop 0.55s cubic-bezier(0.2, 0.9, 0.3, 1.2) both;
         }
-        #login-box h1 {
-            color: #049fd9;
-            margin-bottom: 10px;
-            font-size: 2rem;
+        .login-eyebrow {
+            font-size: 0.65rem;
+            letter-spacing: 0.28em;
+            text-transform: uppercase;
+            color: var(--gold);
+            font-weight: 700;
+            margin-bottom: 8px;
         }
-        #login-box p {
-            color: #ccc;
-            margin-bottom: 30px;
+        .login-card h1 {
+            font-size: 1.7rem;
+            margin: 0 0 8px;
+            color: var(--ink);
+            letter-spacing: 0.02em;
         }
-        #password-input {
-            width: 100%;
-            padding: 15px;
-            font-size: 1.1rem;
-            border: 2px solid #049fd9;
-            border-radius: 8px;
-            background: rgba(0,0,0,0.3);
-            color: white;
-            margin-bottom: 20px;
+        .login-card .sub {
+            color: var(--ink-mute);
+            font-size: 0.9rem;
+            margin-bottom: 26px;
+            letter-spacing: 0.04em;
         }
-        #password-input:focus {
-            outline: none;
-            border-color: #0db8ff;
-            box-shadow: 0 0 10px rgba(4, 159, 217, 0.5);
+        .login-icon {
+            width: 56px; height: 56px;
+            margin: 0 auto 16px;
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            background: radial-gradient(circle, rgba(255,210,74,0.25), transparent 70%);
+            font-size: 1.6rem;
         }
-        #login-btn {
-            width: 100%;
-            padding: 15px;
-            font-size: 1.2rem;
-            font-weight: bold;
-            background: #049fd9;
-            color: white;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.3s;
+        .login-icon::after {
+            content: '';
+            position: absolute;
+            width: 56px; height: 56px;
+            border-radius: 50%;
+            border: 1.5px solid var(--gold-soft);
+            animation: ring-pulse 2.5s ease-out infinite;
         }
-        #login-btn:hover {
-            background: #0db8ff;
-            transform: scale(1.02);
+        @keyframes ring-pulse {
+            0% { transform: scale(0.85); opacity: 0.8; }
+            100% { transform: scale(1.6); opacity: 0; }
+        }
+        .login-card .show-input {
+            text-align: center;
+            font-size: 1.05rem;
+            letter-spacing: 0.04em;
+            margin-bottom: 14px;
         }
         #error-msg {
-            color: #ff4444;
-            margin-top: 15px;
+            color: var(--bad);
+            margin-top: 10px;
+            font-size: 0.85rem;
+            font-weight: 600;
             display: none;
+            letter-spacing: 0.04em;
         }
-        
-        /* Answer Key Screen */
+
+        /* ===== ANSWER SCREEN ===== */
         #answer-screen {
             display: none;
             flex-direction: column;
             min-height: 100vh;
         }
-        header {
-            background: rgba(0,0,0,0.3);
-            padding: 15px 30px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 2px solid #049fd9;
+        .header-title-wrap {
+            display: flex; flex-direction: column; line-height: 1;
         }
-        .header-left {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-        #cisco-logo {
-            height: 35px;
-            background: white;
-            padding: 5px 10px;
-            border-radius: 5px;
-        }
-        header h1 {
-            color: #049fd9;
-            font-size: 1.5rem;
-        }
-        #status {
-            padding: 8px 15px;
-            border-radius: 5px;
-            font-size: 0.9rem;
-            background: rgba(255,255,255,0.1);
-        }
-        #status.connected {
-            color: #28a745;
-            border: 2px solid #28a745;
-        }
-        #status.disconnected {
-            color: #dc3545;
-            border: 2px solid #dc3545;
-        }
-        
         .content {
-            flex-grow: 1;
+            flex: 1;
             display: flex;
             flex-direction: column;
-            justify-content: center;
             align-items: center;
-            padding: 40px;
-            text-align: center;
+            justify-content: center;
+            padding: 48px 24px;
+            position: relative;
+            z-index: 1;
         }
-        
+
+        /* waiting */
         #waiting-state {
-            display: block;
+            text-align: center;
+            animation: show-fade-up 0.6s ease-out both;
         }
+        .waiting-icon {
+            width: 80px; height: 80px;
+            margin: 0 auto 20px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, rgba(255,210,74,0.2), rgba(255,210,74,0.05));
+            border: 1.5px solid var(--gold-soft);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 2rem;
+            animation: spin-slow 8s linear infinite;
+        }
+        @keyframes spin-slow { to { transform: rotate(360deg); } }
         #waiting-state h2 {
-            color: #049fd9;
-            font-size: 2.5rem;
-            margin-bottom: 20px;
+            color: var(--gold);
+            font-size: 2rem;
+            margin: 0 0 10px;
+            letter-spacing: 0.02em;
+            text-shadow: 0 0 28px rgba(255, 210, 74, 0.3);
         }
-        #waiting-state p {
-            color: #ccc;
-            font-size: 1.2rem;
+        #waiting-state .sub {
+            color: var(--ink-dim);
+            font-size: 1rem;
+            letter-spacing: 0.04em;
         }
-        
+
+        /* answer display */
         #answer-display {
             display: none;
             width: 100%;
-            max-width: 1200px;
+            max-width: 1100px;
+            animation: show-fade-up 0.5s ease-out both;
         }
-        #current-question {
-            background: rgba(255,255,255,0.05);
-            border: 2px solid #049fd9;
-            border-radius: 15px;
-            padding: 30px;
-            margin-bottom: 30px;
+        .question-panel {
+            margin-bottom: 22px;
+            padding: 26px 30px;
         }
-        #current-question h3 {
-            color: #049fd9;
-            font-size: 1.3rem;
-            margin-bottom: 15px;
+        .question-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            margin-bottom: 14px;
+        }
+        .q-label {
+            font-size: 0.7rem;
+            color: var(--ink-mute);
+            letter-spacing: 0.22em;
             text-transform: uppercase;
+            font-weight: 700;
+        }
+        .q-value {
+            background: linear-gradient(180deg, var(--gold) 0%, var(--gold-deep) 100%);
+            color: #1a1200;
+            font-weight: 800;
+            padding: 6px 14px;
+            border-radius: 999px;
+            font-size: 1rem;
+            letter-spacing: 0.04em;
+            box-shadow: 0 4px 14px rgba(255, 210, 74, 0.35), inset 0 1px 0 rgba(255,255,255,0.4);
+        }
+        .q-category {
+            font-size: 0.75rem;
+            color: var(--gold);
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            font-weight: 700;
         }
         #question-text {
-            font-size: 1.8rem;
-            line-height: 1.4;
-            color: white;
-            margin-bottom: 20px;
+            font-size: 1.6rem;
+            line-height: 1.45;
+            color: var(--ink);
+            font-weight: 500;
+            text-wrap: pretty;
         }
-        #question-value {
-            display: inline-block;
-            background: gold;
-            color: #000;
-            padding: 8px 20px;
-            border-radius: 5px;
-            font-weight: bold;
-            font-size: 1.2rem;
+
+        /* THE answer */
+        .answer-panel {
+            position: relative;
+            border-radius: 18px;
+            padding: 44px 40px;
+            text-align: center;
+            background: linear-gradient(135deg, #16823b 0%, #28a745 50%, #20c997 100%);
+            border: 1.5px solid rgba(255,255,255,0.3);
+            box-shadow:
+                0 18px 50px rgba(40, 167, 69, 0.45),
+                0 0 80px rgba(40, 167, 69, 0.25),
+                inset 0 1px 0 rgba(255,255,255,0.3),
+                inset 0 -2px 0 rgba(0,0,0,0.15);
+            overflow: hidden;
+            animation: show-pop 0.55s cubic-bezier(0.2, 0.9, 0.3, 1.2) both 0.1s;
         }
-        
-        #answer-box {
-            background: linear-gradient(135deg, #28a745, #20c997);
-            border: 4px solid #fff;
-            border-radius: 20px;
-            padding: 50px;
-            box-shadow: 0 10px 40px rgba(40, 167, 69, 0.4);
+        .answer-panel::before {
+            content: '';
+            position: absolute;
+            top: -60%; left: -20%;
+            width: 60%; height: 220%;
+            background: linear-gradient(120deg, transparent, rgba(255,255,255,0.18), transparent);
+            transform: rotate(15deg);
+            animation: answer-shine 5s ease-in-out infinite;
         }
-        #answer-box h2 {
-            color: white;
-            font-size: 2rem;
-            margin-bottom: 20px;
+        @keyframes answer-shine {
+            0%, 100% { transform: translateX(-30%) rotate(15deg); }
+            50% { transform: translateX(180%) rotate(15deg); }
+        }
+        .answer-eyebrow {
+            font-size: 0.7rem;
+            color: rgba(255,255,255,0.85);
+            font-weight: 800;
+            letter-spacing: 0.32em;
             text-transform: uppercase;
-            letter-spacing: 2px;
+            margin-bottom: 14px;
+            position: relative;
         }
         #answer-text {
-            font-size: 3.5rem;
-            font-weight: bold;
+            font-size: 3rem;
+            font-weight: 800;
             color: white;
-            line-height: 1.3;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            line-height: 1.2;
+            letter-spacing: 0.01em;
+            text-shadow: 0 4px 20px rgba(0,0,0,0.4), 0 0 24px rgba(255,255,255,0.15);
+            position: relative;
+            text-wrap: balance;
         }
-        
+
+        /* buzzer info */
         #buzzer-info {
-            margin-top: 30px;
-            padding: 20px;
-            background: rgba(255,193,7,0.2);
-            border: 2px solid #ffc107;
-            border-radius: 10px;
+            margin-top: 22px;
+            padding: 18px 22px;
+            background: linear-gradient(135deg, rgba(255,193,7,0.15), rgba(255,193,7,0.05));
+            border: 1.5px solid rgba(255, 193, 7, 0.5);
+            border-radius: 12px;
+            box-shadow: 0 8px 24px rgba(255, 193, 7, 0.15), inset 0 1px 0 rgba(255,193,7,0.2);
+            animation: show-fade-up 0.4s ease-out both;
         }
-        #buzzer-info h4 {
-            color: #ffc107;
-            font-size: 1.3rem;
-            margin-bottom: 10px;
+        #buzzer-info .label {
+            font-size: 0.7rem;
+            color: var(--warn);
+            letter-spacing: 0.24em;
+            text-transform: uppercase;
+            font-weight: 700;
+            margin-bottom: 8px;
+            text-align: center;
         }
         #buzzing-team {
             font-size: 1.5rem;
+            font-weight: 700;
             color: white;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 15px;
+            gap: 14px;
         }
-        .team-icon {
-            width: 40px;
-            height: 40px;
+        #buzzing-team .team-icon {
+            width: 44px; height: 44px;
+            filter: drop-shadow(0 4px 12px rgba(0,0,0,0.4));
+        }
+
+        @media (max-width: 700px) {
+            #answer-text { font-size: 2.1rem; }
+            #question-text { font-size: 1.2rem; }
+            .answer-panel { padding: 30px 22px; }
+            .question-panel { padding: 20px 22px; }
         }
     </style>
 </head>
 <body>
-    <!-- Login Screen -->
+    <div id="starfield"></div>
+
+    <!-- Login -->
     <div id="login-screen">
-        <div id="login-box">
-            <h1>🔒 Answer Key</h1>
-            <p>Private access for host only</p>
-            <input type="password" id="password-input" placeholder="Enter password" autofocus>
-            <button id="login-btn" onclick="login()">UNLOCK</button>
-            <div id="error-msg">❌ Incorrect password</div>
+        <div class="show-card show-card--gold login-card">
+            <div class="login-icon">🔒</div>
+            <div class="login-eyebrow">Host Only</div>
+            <h1>Answer Key</h1>
+            <div class="sub">Private access — host display</div>
+            <input type="password" id="password-input" class="show-input" placeholder="Enter password" autofocus>
+            <button id="login-btn" class="show-btn show-btn--gold" style="width:100%;" onclick="login()">Unlock</button>
+            <div id="error-msg">✕ Incorrect password</div>
         </div>
     </div>
 
-    <!-- Answer Screen -->
+    <!-- Answer Key -->
     <div id="answer-screen">
-        <header>
+        <header class="show-header">
             <div class="header-left">
-                <img id="cisco-logo" src="images/learn-with-cisco.png" alt="Logo">
-                <h1>ANSWER KEY</h1>
+                <img id="cisco-logo" class="show-logo" src="images/learn-with-cisco.png" alt="Logo">
+                <div class="header-title-wrap">
+                    <div class="show-eyebrow">Host display</div>
+                    <h1 class="show-title">Answer Key<span class="show-badge">Live</span></h1>
+                </div>
             </div>
-            <div id="status" class="disconnected">🔴 Offline</div>
+            <div id="status" class="show-pill disconnected"><span class="dot"></span><span id="status-text">Offline</span></div>
         </header>
 
         <div class="content">
             <div id="waiting-state">
-                <h2>⏳ Waiting for Question</h2>
-                <p>Select a question on the main board to see the answer here</p>
+                <div class="waiting-icon">⏳</div>
+                <h2>Waiting for question</h2>
+                <div class="sub">Pick a tile on the main board to reveal the answer here</div>
             </div>
 
             <div id="answer-display">
-                <div id="current-question">
-                    <h3>Current Question</h3>
+                <div class="show-card question-panel">
+                    <div class="question-row">
+                        <span class="q-category" id="q-category">Question</span>
+                        <span class="q-value" id="question-value">$0</span>
+                    </div>
+                    <div class="q-label" style="margin-bottom: 8px;">Prompt</div>
                     <div id="question-text"></div>
-                    <span id="question-value"></span>
                 </div>
 
-                <div id="answer-box">
-                    <h2>✓ Answer</h2>
+                <div class="answer-panel">
+                    <div class="answer-eyebrow">✓ The Answer</div>
                     <div id="answer-text"></div>
                 </div>
 
                 <div id="buzzer-info" style="display: none;">
-                    <h4>Team Buzzed:</h4>
+                    <div class="label">Team buzzed</div>
                     <div id="buzzing-team"></div>
                 </div>
             </div>
         </div>
     </div>
 
+    <script src="showtime-stars.js"></script>
     <script src="https://unpkg.com/mqtt@5.3.5/dist/mqtt.min.js"></script>
     <script>
+        buildStarfield(70);
+
         const CORRECT_PASSWORD = 'Cisco1234!';
         const MQTT_BROKER = 'wss://broker.emqx.io:8084/mqtt';
         const INSTANCE_ID = window.location.host.replace(/[^a-zA-Z0-9]/g, '-');
         const TOPIC_QUESTION = `jeopardy/${INSTANCE_ID}/question`;
         const TOPIC_BUZZ = `jeopardy/${INSTANCE_ID}/buzz`;
         const TOPIC_CONFIG = `jeopardy/${INSTANCE_ID}/config`;
-        
+
         let TEAMS = {};
         let mqttClient = null;
 
@@ -310,15 +371,18 @@
                     icon: generateIcon(team)
                 };
             });
-            if (config.branding) {
-                applyBranding(config.branding);
-            }
+            if (config.branding) applyBranding(config.branding);
         }
 
         function applyBranding(b) {
             const logo = document.getElementById('cisco-logo');
-            const title = document.querySelector('.header-left h1');
-            if (b.title) title.textContent = b.title;
+            const title = document.querySelector('.show-title');
+            if (b.title) {
+                // keep the badge intact
+                const badge = title.querySelector('.show-badge');
+                title.firstChild && (title.firstChild.nodeValue = b.title);
+                if (!title.firstChild.nodeValue) title.insertBefore(document.createTextNode(b.title), badge);
+            }
             if (b.logo) {
                 logo.src = b.logo;
                 logo.style.display = 'block';
@@ -333,13 +397,20 @@
             applyConfig(config);
         }
 
-        // Login functionality
+        function setStatus(state, text) {
+            const el = document.getElementById('status');
+            const t = document.getElementById('status-text');
+            el.classList.remove('connected', 'disconnected');
+            el.classList.add(state);
+            t.textContent = text;
+        }
+
         async function login() {
             const password = document.getElementById('password-input').value;
             if (password === CORRECT_PASSWORD) {
                 document.getElementById('login-screen').style.display = 'none';
                 document.getElementById('answer-screen').style.display = 'flex';
-                await loadConfig();
+                try { await loadConfig(); } catch (e) {}
                 connectMQTT();
             } else {
                 document.getElementById('error-msg').style.display = 'block';
@@ -348,12 +419,10 @@
             }
         }
 
-        // Allow Enter key to login
         document.getElementById('password-input').addEventListener('keypress', (e) => {
             if (e.key === 'Enter') login();
         });
 
-        // MQTT Connection
         function connectMQTT() {
             try {
                 mqttClient = mqtt.connect(MQTT_BROKER, {
@@ -363,20 +432,13 @@
                 });
 
                 mqttClient.on('connect', () => {
-                    document.getElementById('status').className = 'connected';
-                    document.getElementById('status').textContent = '🟢 Connected';
-                    
-                    mqttClient.subscribe([TOPIC_QUESTION, TOPIC_BUZZ, TOPIC_CONFIG], (err) => {
-                        if (err) console.error('Subscribe error:', err);
-                    });
+                    setStatus('connected', 'Live');
+                    mqttClient.subscribe([TOPIC_QUESTION, TOPIC_BUZZ, TOPIC_CONFIG]);
                 });
 
                 mqttClient.on('message', (topic, message) => {
                     if (topic === TOPIC_CONFIG) {
-                        try {
-                            const config = JSON.parse(message.toString());
-                            applyConfig(config);
-                        } catch (e) {}
+                        try { applyConfig(JSON.parse(message.toString())); } catch (e) {}
                         return;
                     }
                     const data = JSON.parse(message.toString());
@@ -387,40 +449,37 @@
                     }
                 });
 
-                mqttClient.on('error', (err) => {
-                    console.error('MQTT Error:', err);
-                    document.getElementById('status').className = 'disconnected';
-                    document.getElementById('status').textContent = '🔴 Offline';
-                });
-
-                mqttClient.on('offline', () => {
-                    document.getElementById('status').className = 'disconnected';
-                    document.getElementById('status').textContent = '🔴 Offline';
-                });
+                mqttClient.on('error', () => setStatus('disconnected', 'Error'));
+                mqttClient.on('offline', () => setStatus('disconnected', 'Offline'));
 
             } catch (err) {
-                console.error('Connection failed:', err);
+                setStatus('disconnected', 'Failed');
             }
         }
 
         function showQuestion(data) {
             document.getElementById('waiting-state').style.display = 'none';
-            document.getElementById('answer-display').style.display = 'block';
+            const display = document.getElementById('answer-display');
+            display.style.display = 'block';
+            // re-trigger entrance animation
+            display.style.animation = 'none';
+            void display.offsetWidth;
+            display.style.animation = '';
+
             document.getElementById('buzzer-info').style.display = 'none';
-            
             document.getElementById('question-text').textContent = data.question;
             document.getElementById('answer-text').textContent = data.answer;
             document.getElementById('question-value').textContent = '$' + data.points;
+            document.getElementById('q-category').textContent = data.category || 'Question';
         }
 
         function showBuzzer(team) {
             const buzzerInfo = document.getElementById('buzzer-info');
             const buzzingTeam = document.getElementById('buzzing-team');
-            
             buzzerInfo.style.display = 'block';
             buzzingTeam.innerHTML = `
-                <div class="team-icon">${TEAMS[team].icon}</div>
-                <span>Team ${TEAMS[team].name}</span>
+                <div class="team-icon">${TEAMS[team] ? TEAMS[team].icon : ''}</div>
+                <span>Team ${TEAMS[team] ? TEAMS[team].name : team}</span>
             `;
         }
     </script>
