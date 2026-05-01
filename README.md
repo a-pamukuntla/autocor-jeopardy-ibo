@@ -57,6 +57,12 @@
     <sub><b>Configure live</b></sub>
   </a>
 </td>
+<td align="center" width="200">
+  <a href="https://kiskander.github.io/ciscolive-jeopardy/test-buzzers.html">
+    <img src="https://img.shields.io/badge/%F0%9F%A7%AA-TEST_BUZZERS-b8bedb?style=for-the-badge&labelColor=02041a" /><br />
+    <sub><b>Pre-session debug</b></sub>
+  </a>
+</td>
 </tr>
 </table>
 
