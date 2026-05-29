@@ -1,9 +1,4 @@
-{
-  "finalJeopardy": {
-    "q": "FINAL JEOPARDY: This protocol enables AI models to interact with external tools and data sources through a standardized interface.",
-    "a": "What is MCP (Model Context Protocol)?"
-  },
-  "categories": [
+[
   {
     "name": "Network Automation",
     "questions": [
@@ -101,4 +96,3 @@
 ]
   }
 ]
-}
