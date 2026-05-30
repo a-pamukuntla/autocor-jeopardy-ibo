@@ -653,20 +653,25 @@
         }
 
         /* === DRAG & DROP FINAL JEOPARDY === */
-        #drag-drop-area { display: none; margin: 20px 0; }
-        #drag-drop-area .dd-prompt { color: gold; font-size: 1.4rem; font-weight: bold; margin-bottom: 6px; text-align: center; }
-        #drag-drop-area .dd-hint { color: #aaa; font-size: 0.95rem; text-align: center; margin-bottom: 16px; }
-        .dd-columns { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; align-items: start; }
-        .dd-col-header { color: #049fd9; font-size: 1rem; font-weight: bold; text-align: center; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1px; }
-        .dd-bank { display: flex; flex-direction: column; gap: 8px; min-height: 300px; padding: 12px; background: rgba(255,255,255,0.04); border: 2px dashed #555; border-radius: 10px; }
-        .dd-zone { display: flex; flex-direction: column; gap: 8px; min-height: 300px; padding: 12px; background: rgba(0,0,80,0.5); border: 2px dashed #049fd9; border-radius: 10px; }
-        .dd-bank.drag-over { background: rgba(255,255,255,0.08); border-color: #aaa; }
-        .dd-zone.drag-over { background: rgba(4,159,217,0.15); border-color: gold; }
-        .dd-block { font-family: 'Courier New', monospace; font-size: 1rem; color: #00ff99; background: #000; border: 2px solid #333; border-radius: 6px; padding: 9px 14px; cursor: grab; user-select: none; transition: transform 0.15s, box-shadow 0.15s; white-space: pre; }
-        .dd-block:hover { transform: scale(1.02); box-shadow: 0 4px 15px rgba(0,255,153,0.3); border-color: #00ff99; }
-        .dd-block.dragging { opacity: 0.4; cursor: grabbing; }
-        .dd-zone .dd-block { border-left: 4px solid #049fd9; }
-        .dd-zone-counter { color: #555; font-size: 0.85rem; text-align: center; margin-top: 8px; }
+        #drag-drop-area { display: none; margin: 10px 0; }
+        #drag-drop-area .dd-prompt { color: gold; font-size: 1.4rem; font-weight: bold; margin-bottom: 4px; text-align: center; }
+        #drag-drop-area .dd-hint { color: #aaa; font-size: 0.9rem; text-align: center; margin-bottom: 14px; }
+        .dd-columns { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; align-items: start; }
+        .dd-col-header { font-size: 0.9rem; font-weight: bold; text-align: center; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1px; padding: 6px; border-radius: 6px; }
+        .dd-col-header.left { background: #1a5f8a; color: #cce8ff; }
+        .dd-col-header.right { background: #7a6a00; color: #fff8cc; }
+        /* Left: draggable term bank */
+        .dd-bank { display: flex; flex-direction: column; gap: 8px; padding: 10px; background: rgba(26,95,138,0.15); border: 2px solid #1a5f8a; border-radius: 10px; min-height: 320px; }
+        .dd-term { font-family: 'Courier New', monospace; font-size: 1rem; color: #cce8ff; background: #1a4a6e; border: 2px solid #2a7ab8; border-radius: 6px; padding: 10px 14px; cursor: grab; user-select: none; transition: transform 0.15s, box-shadow 0.15s; text-align: center; }
+        .dd-term:hover { transform: scale(1.02); box-shadow: 0 4px 12px rgba(42,122,184,0.5); border-color: #5ab0f0; }
+        .dd-term.dragging { opacity: 0.35; cursor: grabbing; }
+        /* Right: definition slots */
+        .dd-defs { display: flex; flex-direction: column; gap: 8px; padding: 10px; background: rgba(122,106,0,0.1); border: 2px solid #7a6a00; border-radius: 10px; }
+        .dd-def-row { display: flex; flex-direction: column; gap: 4px; }
+        .dd-def-text { font-size: 0.9rem; color: #fff8cc; background: #3a3000; border: 1px solid #7a6a00; border-radius: 6px 6px 0 0; padding: 8px 12px; line-height: 1.4; }
+        .dd-slot { min-height: 42px; padding: 6px 10px; background: rgba(0,0,0,0.3); border: 2px dashed #7a6a00; border-radius: 0 0 6px 6px; display: flex; align-items: center; transition: background 0.15s, border-color 0.15s; }
+        .dd-slot.drag-over { background: rgba(122,106,0,0.3); border-color: gold; border-style: solid; }
+        .dd-slot .dd-term { margin: 0; width: 100%; box-sizing: border-box; }
         #dd-reset-btn { display: block; margin: 14px auto 0; background: #555; color: white; border: none; padding: 10px 30px; font-size: 1.1rem; font-weight: bold; border-radius: 8px; cursor: pointer; }
         #dd-reset-btn:hover { background: #777; }
 
@@ -954,17 +959,16 @@
         <div id="question-text"></div>
 
         <div id="drag-drop-area">
-            <div class="dd-prompt">🧩 FINAL JEOPARDY — Build a working FastMCP server</div>
-            <div class="dd-hint">Players: write your answer on paper. Host: drag blocks to reveal the correct order.</div>
+            <div class="dd-prompt">🏆 FINAL JEOPARDY — Match each MCP term to its definition</div>
+            <div class="dd-hint">Players write answers on paper — Host drags terms to reveal correct matches</div>
             <div class="dd-columns">
                 <div>
-                    <div class="dd-col-header">📦 Options</div>
+                    <div class="dd-col-header left">📦 Terms (drag these)</div>
                     <div class="dd-bank" id="dd-bank"></div>
                 </div>
                 <div>
-                    <div class="dd-col-header">📋 Correct Order</div>
-                    <div class="dd-zone" id="dd-zone"></div>
-                    <div class="dd-zone-counter" id="dd-counter">0 / 17 blocks placed</div>
+                    <div class="dd-col-header right">📝 Definitions (drop here)</div>
+                    <div class="dd-defs" id="dd-defs"></div>
                 </div>
             </div>
             <button id="dd-reset-btn" onclick="resetDragDrop()">↺ RESET</button>
@@ -1532,72 +1536,66 @@
     }
 
     // === DRAG & DROP FINAL JEOPARDY DATA ===
-    const DD_BLOCKS = [
-        { id: 0, text: "from fastmcp import FastMCP" },
-        { id: 1, text: "from netmiko import ConnectHandler" },
-        { id: 2, text: "mcp = FastMCP('CiscoNetBot')" },
-        { id: 3, text: "@mcp.tool()" },
-        { id: 4, text: "def get_ospf_neighbors(host: str," },
-        { id: 5, text: "                       username: str," },
-        { id: 6, text: "                       password: str) -> str:" },
-        { id: 7, text: "    net_connect = ConnectHandler(" },
-        { id: 8, text: "        device_type='cisco_ios_xe'," },
-        { id: 9, text: "        host=host, username=username," },
-        { id: 10, text: "        password=password)" },
-        { id: 11, text: "    output = net_connect.send_command(" },
-        { id: 12, text: "        'show ip ospf neighbor')" },
-        { id: 13, text: "    if net_connect:" },
-        { id: 14, text: "        net_connect.disconnect()" },
-        { id: 15, text: "    return output" },
-        { id: 16, text: "mcp.run(transport='stdio')" }
+    const DD_PAIRS = [
+        { id: 0, term: '@mcp.tool()',            def: 'Decorator that exposes a Python function as a callable tool the AI agent can invoke' },
+        { id: 1, term: 'FastMCP',                def: 'Python framework used to build a Model Context Protocol server' },
+        { id: 2, term: 'mcp.run(stdio)',          def: 'Starts the MCP server and listens for JSON-RPC messages over standard input/output' },
+        { id: 3, term: 'ConnectHandler()',        def: 'Netmiko class used to establish an SSH connection to a network device' },
+        { id: 4, term: 'if net_connect:',         def: 'Required guard condition that must wrap disconnect() to prevent a script crash' }
     ];
-    // Distractor blocks that look plausible but are wrong
-    const DD_DISTRACTORS = [
-        { id: 97, text: "app = FastMCP.init()" },
-        { id: 98, text: "@mcp.resource()" },
-        { id: 99, text: "mcp.run(transport='http')" }
-    ];
-    const DD_CORRECT_ORDER = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16];
     let ddDragging = null;
-
-    function updateDDCounter() {
-        const count = document.getElementById('dd-zone').querySelectorAll('.dd-block').length;
-        document.getElementById('dd-counter').textContent = `${count} / ${DD_BLOCKS.length} blocks placed`;
-    }
 
     function initDragDrop() {
         const bank = document.getElementById('dd-bank');
-        const zone = document.getElementById('dd-zone');
+        const defs = document.getElementById('dd-defs');
         bank.innerHTML = '';
-        zone.innerHTML = '';
-        updateDDCounter();
-        // Shuffle all blocks + distractors into left bank
-        const all = [...DD_BLOCKS, ...DD_DISTRACTORS].sort(() => Math.random() - 0.5);
-        all.forEach(b => bank.appendChild(makeDDBlock(b)));
-        [bank, zone].forEach(el => {
-            el.addEventListener('dragover', e => { e.preventDefault(); el.classList.add('drag-over'); });
-            el.addEventListener('dragleave', () => el.classList.remove('drag-over'));
-            el.addEventListener('drop', e => {
-                e.preventDefault();
-                el.classList.remove('drag-over');
-                if (ddDragging) {
-                    el.appendChild(ddDragging);
-                    ddDragging = null;
-                    updateDDCounter();
-                }
-            });
-        });
-    }
+        defs.innerHTML = '';
 
-    function makeDDBlock(b) {
-        const div = document.createElement('div');
-        div.className = 'dd-block';
-        div.textContent = b.text;
-        div.dataset.id = b.id;
-        div.draggable = true;
-        div.addEventListener('dragstart', () => { ddDragging = div; div.classList.add('dragging'); });
-        div.addEventListener('dragend', () => div.classList.remove('dragging'));
-        return div;
+        // Shuffle terms into left bank
+        [...DD_PAIRS].sort(() => Math.random() - 0.5).forEach(p => {
+            const div = document.createElement('div');
+            div.className = 'dd-term';
+            div.textContent = p.term;
+            div.dataset.id = p.id;
+            div.draggable = true;
+            div.addEventListener('dragstart', () => { ddDragging = div; div.classList.add('dragging'); });
+            div.addEventListener('dragend', () => div.classList.remove('dragging'));
+            bank.appendChild(div);
+        });
+
+        // Shuffle definitions into right column with drop slots
+        [...DD_PAIRS].sort(() => Math.random() - 0.5).forEach(p => {
+            const row = document.createElement('div');
+            row.className = 'dd-def-row';
+            const defText = document.createElement('div');
+            defText.className = 'dd-def-text';
+            defText.textContent = p.def;
+            const slot = document.createElement('div');
+            slot.className = 'dd-slot';
+            slot.dataset.correctId = p.id;
+            slot.addEventListener('dragover', e => { e.preventDefault(); slot.classList.add('drag-over'); });
+            slot.addEventListener('dragleave', () => slot.classList.remove('drag-over'));
+            slot.addEventListener('drop', e => {
+                e.preventDefault();
+                slot.classList.remove('drag-over');
+                if (!ddDragging) return;
+                // If slot already has a term, send it back to bank
+                const existing = slot.querySelector('.dd-term');
+                if (existing) bank.appendChild(existing);
+                slot.appendChild(ddDragging);
+                ddDragging = null;
+            });
+            row.appendChild(defText);
+            row.appendChild(slot);
+            defs.appendChild(row);
+        });
+
+        // Allow dragging back to bank
+        bank.addEventListener('dragover', e => e.preventDefault());
+        bank.addEventListener('drop', e => {
+            e.preventDefault();
+            if (ddDragging) { bank.appendChild(ddDragging); ddDragging = null; }
+        });
     }
 
     function resetDragDrop() { initDragDrop(); }
@@ -1605,11 +1603,10 @@
     function triggerFinal() {
         currentPoints = 500;
         const modal = document.getElementById('modal');
-        // Hide normal question text, show drag-drop area
-        document.getElementById('question-text').innerHTML = '<span style="color:gold;font-size:2rem;font-weight:bold;">🏆 FINAL JEOPARDY</span>';
+        document.getElementById('question-text').innerHTML = '';
         document.getElementById('drag-drop-area').style.display = 'block';
         document.getElementById('actual-answer').innerText =
-            'Correct order: import FastMCP → import ConnectHandler → instantiate mcp → @mcp.tool() → def function(params) → ConnectHandler() → send_command() → if net_connect: disconnect() → return output → mcp.run(stdio)';
+            '@mcp.tool() → Decorator exposing a tool | FastMCP → MCP server framework | mcp.run(stdio) → starts server over stdio | ConnectHandler() → Netmiko SSH class | if net_connect: → disconnect() guard';
         modal.style.display = 'flex';
         modal.classList.add('opening');
         setTimeout(() => modal.classList.remove('opening'), 700);
