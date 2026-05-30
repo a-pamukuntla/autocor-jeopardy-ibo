@@ -652,6 +652,25 @@
             to { opacity: 1; transform: translateY(0) scale(1); }
         }
 
+        /* === DRAG & DROP FINAL JEOPARDY === */
+        #drag-drop-area { display: none; margin: 20px 0; text-align: left; }
+        #drag-drop-area .dd-prompt { color: gold; font-size: 1.3rem; font-weight: bold; margin-bottom: 12px; text-align: center; }
+        #drag-drop-area .dd-hint { color: #aaa; font-size: 0.95rem; text-align: center; margin-bottom: 18px; }
+        .dd-bank { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; min-height: 60px; padding: 12px; background: rgba(255,255,255,0.05); border: 2px dashed #555; border-radius: 10px; margin-bottom: 14px; }
+        .dd-zone { min-height: 280px; padding: 12px; background: rgba(0,0,80,0.5); border: 2px dashed #049fd9; border-radius: 10px; margin-bottom: 14px; display: flex; flex-direction: column; gap: 8px; }
+        .dd-zone.drag-over { background: rgba(4,159,217,0.15); border-color: gold; }
+        .dd-block { font-family: 'Courier New', monospace; font-size: 1.1rem; color: #00ff99; background: #000; border: 2px solid #333; border-radius: 6px; padding: 10px 16px; cursor: grab; user-select: none; transition: transform 0.15s, box-shadow 0.15s; white-space: pre; }
+        .dd-block:hover { transform: scale(1.03); box-shadow: 0 4px 15px rgba(0,255,153,0.3); border-color: #00ff99; }
+        .dd-block.dragging { opacity: 0.4; cursor: grabbing; }
+        .dd-block.correct-slot { border-color: #28a745; box-shadow: 0 0 10px rgba(40,167,69,0.5); }
+        .dd-block.wrong-slot { border-color: #dc3545; box-shadow: 0 0 10px rgba(220,53,69,0.5); animation: shake 0.3s; }
+        @keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-6px)} 75%{transform:translateX(6px)} }
+        .dd-labels { display: flex; justify-content: space-between; font-size: 0.85rem; color: #888; margin-bottom: 4px; padding: 0 4px; }
+        #dd-check-btn { background: #049fd9; color: white; border: none; padding: 12px 35px; font-size: 1.2rem; font-weight: bold; border-radius: 8px; cursor: pointer; margin: 6px; }
+        #dd-check-btn:hover { background: #0db8ff; }
+        #dd-reset-btn { background: #555; color: white; border: none; padding: 12px 35px; font-size: 1.2rem; font-weight: bold; border-radius: 8px; cursor: pointer; margin: 6px; }
+        #dd-result { margin-top: 12px; font-size: 1.4rem; font-weight: bold; text-align: center; min-height: 2rem; }
+
         #modal-buzzer-indicator {
             display: none;
             background: linear-gradient(135deg, #ffc107, #ff7800);
@@ -934,7 +953,21 @@
     <div id="modal-content" onclick="event.stopPropagation()">
         <button id="modal-close-btn" onclick="closeModal()">✕</button>
         <div id="question-text"></div>
-        
+
+        <div id="drag-drop-area">
+            <div class="dd-prompt">🧩 FINAL JEOPARDY — Arrange these code blocks into a working FastMCP server</div>
+            <div class="dd-hint">Drag blocks from the bank into the correct order in the drop zone</div>
+            <div class="dd-labels"><span>📦 Code Bank</span><span>drag to move blocks back</span></div>
+            <div class="dd-bank" id="dd-bank"></div>
+            <div class="dd-labels"><span>📋 Drop Zone (top = first line)</span></div>
+            <div class="dd-zone" id="dd-zone"></div>
+            <div style="text-align:center">
+                <button id="dd-check-btn" onclick="checkDragDrop()">✓ CHECK ORDER</button>
+                <button id="dd-reset-btn" onclick="resetDragDrop()">↺ RESET</button>
+            </div>
+            <div id="dd-result"></div>
+        </div>
+
         <div id="modal-buzzer-indicator">
             <div id="modal-buzzer-icon" class="team-icon"></div>
             <span id="modal-buzzer-text">TEAM BUZZED!</span>
@@ -1492,16 +1525,116 @@
     function closeModal() { 
         document.getElementById('modal').style.display = 'none';
         document.getElementById('quick-scoring').classList.remove('active');
+        document.getElementById('drag-drop-area').style.display = 'none';
         resetBuzzer();
     }
 
+    // === DRAG & DROP FINAL JEOPARDY DATA ===
+    const DD_BLOCKS = [
+        { id: 0, text: "from fastmcp import FastMCP" },
+        { id: 1, text: "from netmiko import ConnectHandler" },
+        { id: 2, text: "mcp = FastMCP('CiscoNetBot')" },
+        { id: 3, text: "@mcp.tool()" },
+        { id: 4, text: "def get_ospf_neighbors(host: str," },
+        { id: 5, text: "                       username: str," },
+        { id: 6, text: "                       password: str) -> str:" },
+        { id: 7, text: "    net_connect = ConnectHandler(" },
+        { id: 8, text: "        device_type='cisco_ios_xe'," },
+        { id: 9, text: "        host=host, username=username," },
+        { id: 10, text: "        password=password)" },
+        { id: 11, text: "    output = net_connect.send_command(" },
+        { id: 12, text: "        'show ip ospf neighbor')" },
+        { id: 13, text: "    if net_connect:" },
+        { id: 14, text: "        net_connect.disconnect()" },
+        { id: 15, text: "    return output" },
+        { id: 16, text: "mcp.run(transport='stdio')" }
+    ];
+    // Distractor blocks that look plausible but are wrong
+    const DD_DISTRACTORS = [
+        { id: 97, text: "app = FastMCP.init()" },
+        { id: 98, text: "@mcp.resource()" },
+        { id: 99, text: "mcp.run(transport='http')" }
+    ];
+    const DD_CORRECT_ORDER = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16];
+    let ddDragging = null;
+
+    function initDragDrop() {
+        const bank = document.getElementById('dd-bank');
+        const zone = document.getElementById('dd-zone');
+        bank.innerHTML = '';
+        zone.innerHTML = '';
+        document.getElementById('dd-result').textContent = '';
+        // shuffle all blocks + distractors into bank
+        const all = [...DD_BLOCKS, ...DD_DISTRACTORS].sort(() => Math.random() - 0.5);
+        all.forEach(b => bank.appendChild(makeDDBlock(b)));
+        [bank, zone].forEach(el => {
+            el.addEventListener('dragover', e => { e.preventDefault(); el.classList.add('drag-over'); });
+            el.addEventListener('dragleave', () => el.classList.remove('drag-over'));
+            el.addEventListener('drop', e => {
+                e.preventDefault();
+                el.classList.remove('drag-over');
+                if (ddDragging) {
+                    el.appendChild(ddDragging);
+                    ddDragging = null;
+                }
+            });
+        });
+    }
+
+    function makeDDBlock(b) {
+        const div = document.createElement('div');
+        div.className = 'dd-block';
+        div.textContent = b.text;
+        div.dataset.id = b.id;
+        div.draggable = true;
+        div.addEventListener('dragstart', () => { ddDragging = div; div.classList.add('dragging'); });
+        div.addEventListener('dragend', () => div.classList.remove('dragging'));
+        return div;
+    }
+
+    function checkDragDrop() {
+        const zone = document.getElementById('dd-zone');
+        const placed = [...zone.querySelectorAll('.dd-block')];
+        const result = document.getElementById('dd-result');
+        // Remove distractor ids from correct check
+        const validIds = placed.map(b => parseInt(b.dataset.id)).filter(id => id < 90);
+        const distCount = placed.filter(b => parseInt(b.dataset.id) >= 90).length;
+        if (distCount > 0) {
+            result.style.color = '#dc3545';
+            result.textContent = '❌ You have distractor blocks in your answer — remove them!';
+            placed.filter(b => parseInt(b.dataset.id) >= 90).forEach(b => b.classList.add('wrong-slot'));
+            return;
+        }
+        if (validIds.length !== DD_CORRECT_ORDER.length) {
+            result.style.color = '#ffc107';
+            result.textContent = `⚠️ You have ${validIds.length} of ${DD_CORRECT_ORDER.length} required blocks placed.`;
+            return;
+        }
+        const isCorrect = validIds.every((id, i) => id === DD_CORRECT_ORDER[i]);
+        if (isCorrect) {
+            result.style.color = '#28a745';
+            result.textContent = '✅ CORRECT! Perfect FastMCP server — full points!';
+            placed.forEach(b => b.classList.add('correct-slot'));
+        } else {
+            result.style.color = '#dc3545';
+            result.textContent = '❌ Wrong order — check your MCP structure and try again!';
+            placed.forEach((b, i) => {
+                b.classList.remove('correct-slot', 'wrong-slot');
+                b.classList.add(parseInt(b.dataset.id) === DD_CORRECT_ORDER[i] ? 'correct-slot' : 'wrong-slot');
+            });
+        }
+    }
+
+    function resetDragDrop() { initDragDrop(); }
+
     function triggerFinal() {
-        currentPoints = 100;
-        const question = finalJeopardyQuestion || "FINAL JEOPARDY: No question configured. Set one in the setup page.";
-        const answer = finalJeopardyAnswer || "No answer configured";
-        setQuestionAnimated(question);
-        document.getElementById('actual-answer').innerText = answer;
+        currentPoints = 500;
         const modal = document.getElementById('modal');
+        // Hide normal question text, show drag-drop area
+        document.getElementById('question-text').innerHTML = '<span style="color:gold;font-size:2rem;font-weight:bold;">🏆 FINAL JEOPARDY</span>';
+        document.getElementById('drag-drop-area').style.display = 'block';
+        document.getElementById('actual-answer').innerText =
+            'Correct order: import FastMCP → import ConnectHandler → instantiate mcp → @mcp.tool() → def function(params) → ConnectHandler() → send_command() → if net_connect: disconnect() → return output → mcp.run(stdio)';
         modal.style.display = 'flex';
         modal.classList.add('opening');
         setTimeout(() => modal.classList.remove('opening'), 700);
@@ -1510,6 +1643,7 @@
         ans.classList.remove('revealed');
         document.getElementById('reveal-btn').style.display = 'inline-block';
         updatePreviews();
+        initDragDrop();
     }
 
     // ====== TWEAKS PANEL ======
