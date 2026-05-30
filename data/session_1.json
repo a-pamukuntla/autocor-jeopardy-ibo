@@ -1,99 +1,135 @@
-[
-  {
-    "name": "Network Automation",
-    "questions": [
-
-  {
-    "q": "This fundamental property of both Ansible and Terraform ensures that re-running a configuration script against a device already in the desired state results in no changes, preventing configuration drift.",
-    "a": "What is Idempotency?"
-  },
-  {  "q": "In a RESTCONF (RFC 8040) implementation, which HTTP header must be set to 'application/yang-data+json' to ensure the payload is correctly mapped to the underlying YANG model?",
-    "a": "What is the Content-Type header?"
-  },    
-  { "q": "In this Netmiko script, what method should replace the blank to push multiple config lines to a device?<pre><code>config_commands = [\n    'interface GigabitEthernet1',\n    'description WAN-LINK',\n    'no shutdown'\n]\nnet_connect.___________(config_commands)</code></pre>",
-    "a": "What is send_config_set()?"
-  },
-  { "q": "When traversing this YANG tree to build a VPN config payload, what YANG module namespace must always prefix your container names?<pre><code>module: Cisco-IOS-XE-native\n  +--rw native\n     +--rw ip\n        +--rw vrf\n           +--rw definition* [name]\n              +--rw name    string\n              +--rw rd?     string</code></pre>",
-    "a": "What is Cisco-IOS-XE-native (NATIVE)?"
-  },
-  { "q": "Based on this YANG tree snippet, what is the correct RESTCONF path to configure a VRF named 'MGMT'?<pre><code>module: Cisco-IOS-XE-native\n  +--rw native\n     +--rw ip\n        +--rw vrf\n           +--rw definition* [name]\n              +--rw name    string</code></pre>",
-    "a": "What is /restconf/data/Cisco-IOS-XE-native:native/ip/vrf/definition=MGMT?"
-  }
+{
+  "finalJeopardy": {
+    "q": "Match each concept to its description",
+    "a": "Idempotency|ios_config|terraform apply|Pull-based model|RESTCONF Content-Type header",
+    "pairs": [
+      {
+        "id": 0,
+        "term": "Idempotency",
+        "def": "Ensures re-running config against desired state results in no changes"
+      },
+      {
+        "id": 1,
+        "term": "ios_config",
+        "def": "Ansible module that ensures a specific configuration line exists in Cisco IOS XE"
+      },
+      {
+        "id": 2,
+        "term": "terraform apply",
+        "def": "Terraform command that applies changes to reach the desired state"
+      },
+      {
+        "id": 3,
+        "term": "Pull-based model",
+        "def": "Network devices independently pull config from central Git repository"
+      },
+      {
+        "id": 4,
+        "term": "RESTCONF Content-Type",
+        "def": "Must be set to 'application/yang-data+json' for proper YANG mapping"
+      }
     ]
   },
-  {
-    "name": "Infrastructure as Code",
-    "questions": [
-  {
-    "q": "What block is missing to make this a valid Terraform configuration for the Cisco IOS XE provider?<pre><code>terraform {\n  ___________ {\n    iosxe = {\n      source  = \"cisco-devnet/iosxe\"\n      version = \"~> 0.3\"\n    }\n  }\n}</code></pre>",
-    "a": "What is required_providers?"
-  },
-  {
-    "q": "What keyword defines this reusable input in Terraform so it can be passed at runtime?<pre><code>___________ \"hostname\" {\n  type        = string\n  description = \"Device hostname\"\n  default     = \"router1\"\n}</code></pre>",
-    "a": "What is variable?"
-  },
-  {
-    "q": "In a GitLab CI/CD pipeline, this specific stage is responsible for preparing the environment, such as installing necessary Python libraries or pulling Docker images, before any tests or deployments are executed.",
-    "a": "What is the build stage?"
-  },
-  {
-    "q": "A critical bug fix for a production ACL was accidentally committed to a 'testing' branch that contains many other unfinished features. To move only that specific fix into the 'main' branch without merging the rest of the testing code, you would use this command.",
-    "a": "What is git cherry-pick?"
-  },
-  {
-    "q": "A GitLab CI/CD pipeline fails with an 'Incompatible Version' error for a library like 'Netmiko.' The engineer finds that two different stages are pulling different base Docker images, leading to a conflict in the execution environment. This specific Docker-related strategyis best practice to resolve this .",
-    "a": "What is a Custom Docker Image (or a 'Single Source of Image')?"
-  }
-    ]
-  },
-  {
-    "name": "Operations",
-    "questions": [
-  {
-    "q": "An automation team needs to send real-time, human-readable notifications to a Cisco Webex or Slack channel whenever a critical deployment fails. Which specific logging destination method is most appropriate for this requirement?",
-    "a": "What is a Webhook?"
-  },
-  {
-    "q": "In Model-Driven Telemetry, this specific protocol is commonly used as the transport layer for 'Dial-Out' telemetry because it supports HTTP/2, bidirectional streaming, and efficient binary encoding.",
-    "a": "What is gRPC?"
-  },      
-  {
-    "q": "To prevent 'Credential Leakage' in a public Git repository, an engineer uses this specific secure coding practice to ensure that API keys and passwords are never hardcoded in the script, but are instead retrieved from the local environment at runtime.",
-    "a": "What are Environment Variables (Secret Management)?"
-  },      
-  {
-    "q": "In a pyATS-driven change validation workflow, an engineer uses this specific CLI command to capture the 'Operational State' of a network feature, such as the interface status, into a structured JSON file for later comparison.",
-    "a": "What is pyats learn?"
-  },      
-  {
-    "q": "To secure a network controller's API, an engineer must generate this specific file, which contains the organization's public key and identity information, to be sent to a Certificate Authority (CA) for signing.",
-    "a": "What is a Certificate Signing Request (CSR)?"
-  }
-    ]
-  },
-  {
-    "name": "AI in Automation",
-    "questions": [
-  {
-    "q": "To provide a conversational agent with real-time OSPF neighbor counts without exposing the entire database, an engineer builds this specific server type, which acts as a standardized interface between the LLM and the network API.",
-    "a": "What is an MCP (Model Context Protocol) Server?"
-  },
-  {
-    "q": "This specific architectural pattern is used to 'ground' a conversational agent's responses in real-world network data by fetching relevant logs or configs before the LLM generates an answer, preventing hallucinations.",
-    "a": "What is RAG (Retrieval-Augmented Generation)?"
-  },      
-  {
-    "q": "What are the three lines needed to create and run a minimal FastMCP server?<pre><code>from ___________ import FastMCP\n\nmcp = ___________('NetworkBot')\n\nmcp.run(___________)</code></pre>",
-    "a": "What is fastmcp, FastMCP(), and stdio?"
-  },     
-  { "q": "During a security audit of an AI-driven SOC, it is discovered that the model can be tricked into ignoring malicious traffic by appending specific ignore strings to log entries. This is an example of this specific vulnerability.", 
-    "a": "What is Prompt Injection (Adversarial Attack)" 
-  },
-  {
-    "q": "What decorator exposes this Python function as a callable tool that an AI agent can invoke via MCP?<pre><code>___________\ndef get_ospf_neighbors(device_ip: str) -> str:\n    \"\"\"Returns OSPF neighbor count for a device.\"\"\"\n    net_connect = ConnectHandler(...)\n    return net_connect.send_command('show ip ospf neighbor')</code></pre>",
-    "a": "What is @mcp.tool()?"
-  }    
-]
-  }
+  "categories": [
+    {
+      "name": "Network Automation",
+      "questions": [
+        {
+          "q": "This fundamental property of both Ansible and Terraform ensures that re-running a configuration script against a device already in the desired state results in no changes, preventing configuration drift.",
+          "a": "What is Idempotency?"
+        },
+        {
+          "q": "In a RESTCONF (RFC 8040) implementation, which HTTP header must be set to 'application/yang-data+json' to ensure the payload is correctly mapped to the underlying YANG model?",
+          "a": "What is the Content-Type header?"
+        },
+        {
+          "q": "This Terraform command applies changes to reach the desired state, effectively 'pushing' config.",
+          "a": "What is terraform apply?"
+        },
+        {
+          "q": "This Ansible module ensures a specific configuration line exists in a Cisco IOS XE device's running config.",
+          "a": "What is ios_config?"
+        },
+        {
+          "q": "An enterprise requires a solution where network devices independently pull their configuration from a central Git repository and apply it locally. This specific automation model is chosen to ensure continuous compliance and high scalability without a central push-based controller.",
+          "a": "What is a Pull-based (or GitOps) model?"
+        }
+      ]
+    },
+    {
+      "name": "Infrastructure as Code",
+      "questions": [
+        {
+          "q": "This Git command is used to switch between different branches in a repository, allowing an engineer to move from a 'development' branch to a 'production' branch to review code.",
+          "a": "What is git checkout?"
+        },
+        {
+          "q": "In a Docker Compose file, this specific parameter is used to map a local directory on the host machine to a directory inside the container, ensuring that configuration data or 'Source of Truth' files remain persistent even if the container is restarted.",
+          "a": "What is a volume?"
+        },
+        {
+          "q": "In a GitLab CI/CD pipeline, this specific stage is responsible for preparing the environment, such as installing necessary Python libraries or pulling Docker images, before any tests or deployments are executed.",
+          "a": "What is the build stage?"
+        },
+        {
+          "q": "A critical bug fix for a production ACL was accidentally committed to a 'testing' branch that contains many other unfinished features. To move only that specific fix into the 'main' branch without merging the rest of the testing code, you would use this command.",
+          "a": "What is git cherry-pick?"
+        },
+        {
+          "q": "A GitLab CI/CD pipeline fails with an 'Incompatible Version' error for a library like 'Netmiko.' The engineer finds that two different stages are pulling different base Docker images, leading to a conflict in the execution environment. This specific Docker-related strategyis best practice to resolve this .",
+          "a": "What is a Custom Docker Image (or a 'Single Source of Image')?"
+        }
+      ]
+    },
+    {
+      "name": "Operations",
+      "questions": [
+        {
+          "q": "An automation team needs to send real-time, human-readable notifications to a Cisco Webex or Slack channel whenever a critical deployment fails. Which specific logging destination method is most appropriate for this requirement?",
+          "a": "What is a Webhook?"
+        },
+        {
+          "q": "In Model-Driven Telemetry, this specific protocol is commonly used as the transport layer for 'Dial-Out' telemetry because it supports HTTP/2, bidirectional streaming, and efficient binary encoding.",
+          "a": "What is gRPC?"
+        },
+        {
+          "q": "To prevent 'Credential Leakage' in a public Git repository, an engineer uses this specific secure coding practice to ensure that API keys and passwords are never hardcoded in the script, but are instead retrieved from the local environment at runtime.",
+          "a": "What are Environment Variables (Secret Management)?"
+        },
+        {
+          "q": "In a pyATS-driven change validation workflow, an engineer uses this specific CLI command to capture the 'Operational State' of a network feature, such as the interface status, into a structured JSON file for later comparison.",
+          "a": "What is pyats learn?"
+        },
+        {
+          "q": "To secure a network controller's API, an engineer must generate this specific file, which contains the organization's public key and identity information, to be sent to a Certificate Authority (CA) for signing.",
+          "a": "What is a Certificate Signing Request (CSR)?"
+        }
+      ]
+    },
+    {
+      "name": "AI in Automation",
+      "questions": [
+        {
+          "q": "To provide a conversational agent with real-time OSPF neighbor counts without exposing the entire database, an engineer builds this specific server type, which acts as a standardized interface between the LLM and the network API.",
+          "a": "What is an MCP (Model Context Protocol) Server?"
+        },
+        {
+          "q": "This specific architectural pattern is used to 'ground' a conversational agent's responses in real-world network data by fetching relevant logs or configs before the LLM generates an answer, preventing hallucinations.",
+          "a": "What is RAG (Retrieval-Augmented Generation)?"
+        },
+        {
+          "q": "In an MCP architecture, this specific component is the 'host' application (like a CLI tool or a web app) that actually initiates the connection to the MCP server to provide context to the LLM.",
+          "a": "What is the MCP Client?"
+        },
+        {
+          "q": "During a security audit of an AI-driven SOC, it is discovered that the model can be tricked into ignoring malicious traffic by appending specific ignore strings to log entries. This is an example of this specific vulnerability.",
+          "a": "What is Prompt Injection (Adversarial Attack)"
+        },
+        {
+          "q": "In a Python FastMCP implementation, this specific decorator is used to define a function that an AI agent can call to retrieve live interface statistics from a Cisco Catalyst switch.",
+          "a": "What is @mcp.tool()?"
+        }
+      ]
+    }
   ]
 }

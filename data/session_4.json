@@ -1,115 +1,135 @@
 {
   "finalJeopardy": {
-    "q": "Match each MCP and Netmiko term to its correct description.",
-    "a": "@mcp.tool()=expose function as tool | FastMCP=MCP server framework | mcp.run(stdio)=start server over stdio | ConnectHandler()=Netmiko SSH class | if net_connect:=disconnect guard",
+    "q": "Match each code pattern to its purpose",
+    "a": "@mcp.tool()|FastMCP|mcp.run(stdio)|ConnectHandler()|if net_connect guard",
     "pairs": [
-      { "id": 0, "term": "@mcp.tool()",       "def": "Decorator that exposes a Python function as a callable tool the AI agent can invoke" },
-      { "id": 1, "term": "FastMCP",           "def": "Python framework used to build a Model Context Protocol server" },
-      { "id": 2, "term": "mcp.run(stdio)",    "def": "Starts the MCP server and listens for JSON-RPC messages over standard input/output" },
-      { "id": 3, "term": "ConnectHandler()",  "def": "Netmiko class used to establish an SSH connection to a network device" },
-      { "id": 4, "term": "if net_connect:",   "def": "Required guard condition that must wrap disconnect() to prevent a script crash" }
+      {
+        "id": 0,
+        "term": "@mcp.tool()",
+        "def": "Decorator to expose Python function as MCP tool for AI agents"
+      },
+      {
+        "id": 1,
+        "term": "FastMCP",
+        "def": "Lightweight Python framework for building MCP servers"
+      },
+      {
+        "id": 2,
+        "term": "mcp.run(stdio)",
+        "def": "FastMCP method to run server over standard I/O"
+      },
+      {
+        "id": 3,
+        "term": "ConnectHandler()",
+        "def": "Netmiko function to establish device connection"
+      },
+      {
+        "id": 4,
+        "term": "if net_connect guard",
+        "def": "Safety check ensuring connection is established before use"
+      }
     ]
   },
   "categories": [
-  {
-    "name": "Netmiko & Python",
-    "questions": [
-      {
-        "q": "What class and required parameters complete this Netmiko connection?<pre><code>from netmiko import ___________\n\nnet_connect = ___________(\n    device_type='cisco_ios',\n    host='10.10.10.1',\n    ___________='admin',\n    ___________='Cisco123'\n)</code></pre>",
-        "a": "What is ConnectHandler, with username and password?"
-      },
-      {
-        "q": "This specific condition must always wrap the disconnect() call to prevent a script from crashing if the connection was never established.<pre><code>if ___________:\n    net_connect.disconnect()</code></pre>",
-        "a": "What is if(net_connect)?"
-      },
-      {
-        "q": "What is the output of this Python snippet given interface 'GigabitEthernet1' is up?<pre><code>output = net_connect.send_command(\n    'show interfaces GigabitEthernet1',\n    use_textfsm=True\n)\nprint(output[0]['oper_status'])</code></pre>",
-        "a": "What is 'up'?"
-      },
-      {
-        "q": "In this Netmiko script, what method should replace the blank to push multiple config lines to a device?<pre><code>config_commands = [\n    'interface GigabitEthernet1',\n    'description WAN-LINK',\n    'no shutdown'\n]\nnet_connect.___________(config_commands)</code></pre>",
-        "a": "What is send_config_set()?"
-      },
-      {
-        "q": "What is the correct device_type string for a Cisco IOS XE device in this Netmiko connection dictionary?<pre><code>device = {\n    'device_type': '___________',\n    'host': '192.168.1.1',\n    'username': 'admin',\n    'password': 'Cisco123'\n}</code></pre>",
-        "a": "What is 'cisco_ios_xe'?"
-      }
-    ]
-  },
-  {
-    "name": "Terraform",
-    "questions": [
-      {
-        "q": "What block is missing to make this a valid Terraform configuration for the Cisco IOS XE provider?<pre><code>terraform {\n  ___________ {\n    iosxe = {\n      source  = \"cisco-devnet/iosxe\"\n      version = \"~> 0.3\"\n    }\n  }\n}</code></pre>",
-        "a": "What is required_providers?"
-      },
-      {
-        "q": "What keyword defines this reusable input in Terraform so it can be passed at runtime?<pre><code>___________ \"hostname\" {\n  type        = string\n  description = \"Device hostname\"\n  default     = \"router1\"\n}</code></pre>",
-        "a": "What is variable?"
-      },
-      {
-        "q": "How do you reference the variable defined below inside a Terraform resource block?<pre><code>variable \"mgmt_ip\" {\n  type = string\n}\n\nresource \"iosxe_interface\" \"mgmt\" {\n  host = ___________\n}</code></pre>",
-        "a": "What is var.mgmt_ip?"
-      },
-      {
-        "q": "What Terraform command would you run first to see what changes this config will make before applying it?<pre><code>resource \"iosxe_restconf\" \"ospf\" {\n  path = \"Cisco-IOS-XE-native:native/router/ospf\"\n  attributes = jsonencode({\n    \"Cisco-IOS-XE-ospf:process-id\" = 1\n  })\n}</code></pre>",
-        "a": "What is terraform plan?"
-      },
-      {
-        "q": "In this Terraform snippet, what is the correct syntax to reference the output of one resource inside another?<pre><code>resource \"iosxe_interface\" \"loopback\" {\n  name = \"Loopback0\"\n}\n\nresource \"iosxe_restconf\" \"router_id\" {\n  attributes = jsonencode({\n    id = ___________\n  })\n}</code></pre>",
-        "a": "What is iosxe_interface.loopback.name?"
-      }
-    ]
-  },
-  {
-    "name": "YANG & NETCONF",
-    "questions": [
-      {
-        "q": "When traversing this YANG tree to build a VPN config payload, what YANG module namespace must always prefix your container names?<pre><code>module: Cisco-IOS-XE-native\n  +--rw native\n     +--rw ip\n        +--rw vrf\n           +--rw definition* [name]\n              +--rw name    string\n              +--rw rd?     string</code></pre>",
-        "a": "What is Cisco-IOS-XE-native (NATIVE)?"
-      },
-      {
-        "q": "Based on this YANG tree snippet, what is the correct RESTCONF path to configure a VRF named 'MGMT'?<pre><code>module: Cisco-IOS-XE-native\n  +--rw native\n     +--rw ip\n        +--rw vrf\n           +--rw definition* [name]\n              +--rw name    string</code></pre>",
-        "a": "What is /restconf/data/Cisco-IOS-XE-native:native/ip/vrf/definition=MGMT?"
-      },
-      {
-        "q": "When building this NETCONF payload to configure a VPN from a YANG tree, what operation attribute tells the device to create the VRF only if it doesn't already exist?<pre><code>&lt;config&gt;\n  &lt;native xmlns=\"...native\"&gt;\n    &lt;vrf operation=\"___________\"&gt;\n      &lt;definition&gt;\n        &lt;name&gt;VPN-CORP&lt;/name&gt;\n      &lt;/definition&gt;\n    &lt;/vrf&gt;\n  &lt;/native&gt;\n&lt;/config&gt;</code></pre>",
-        "a": "What is merge?"
-      },
-      {
-        "q": "Given this YANG tree, what Python data structure correctly maps the VPN interface binding?<pre><code>+--rw vrf\n   +--rw definition* [name]\n      +--rw name         string\n      +--rw interface* [name]\n         +--rw name    string</code></pre>",
-        "a": "What is a nested dictionary with 'vrf' > 'definition' > list of interfaces?"
-      },
-      {
-        "q": "In YANG, the snippets in the tree use this symbol to indicate a configuration list whose entries are uniquely identified by a key value like 'name' or 'id'.<pre><code>+--rw definition* [name]\n+--rw neighbor*  [id]\n+--rw route*     [prefix]</code></pre>",
-        "a": "What is * (list node with a key)?"
-      }
-    ]
-  },
-  {
-    "name": "AI & MCP",
-    "questions": [
-      {
-        "q": "What are the three lines needed to create and run a minimal FastMCP server?<pre><code>from ___________ import FastMCP\n\nmcp = ___________('NetworkBot')\n\nmcp.run(___________)</code></pre>",
-        "a": "What is fastmcp, FastMCP(), and stdio?"
-      },
-      {
-        "q": "What decorator exposes this Python function as a callable tool that an AI agent can invoke via MCP?<pre><code>___________\ndef get_ospf_neighbors(device_ip: str) -> str:\n    \"\"\"Returns OSPF neighbor count for a device.\"\"\"\n    net_connect = ConnectHandler(...)\n    return net_connect.send_command('show ip ospf neighbor')</code></pre>",
-        "a": "What is @mcp.tool()?"
-      },
-      {
-        "q": "In LangChain, what naming convention do all chat model wrapper classes follow, and what method is used to send a prompt and get a response?<pre><code>from langchain_openai import ___________\n\nllm = ___________(model='gpt-4o')\nresponse = llm.___________([HumanMessage(content='Explain OSPF')])</code></pre>",
-        "a": "What is Chat[ModelName] (e.g. ChatOpenAI) and .invoke()?"
-      },
-      {
-        "q": "This decorator in FastMCP defines a reusable prompt template so an AI agent follows a fixed troubleshooting sequence, such as diagnosing CRC errors step by step.<pre><code>___________\ndef crc_troubleshoot(interface: str) -> str:\n    return f\"Check interface {interface}, then check cables...\"</code></pre>",
-        "a": "What is @mcp.prompt()?"
-      },
-      {
-        "q": "Looking at this FastMCP server skeleton, what is the correct transport argument to pass to run() so the server communicates over standard input/output with an MCP client?<pre><code>from fastmcp import FastMCP\nmcp = FastMCP('CiscoBot')\n\n@mcp.tool()\ndef get_bgp_summary(): ...\n\nif __name__ == '__main__':\n    mcp.run(transport='___________')</code></pre>",
-        "a": "What is stdio?"
-      }
-    ]
-  }
+    {
+      "name": "Netmiko & Python",
+      "questions": [
+        {
+          "q": "What class and required parameters complete this Netmiko connection?<pre><code>from netmiko import ___________\n\nnet_connect = ___________(\n    device_type='cisco_ios',\n    host='10.10.10.1',\n    ___________='admin',\n    ___________='Cisco123'\n)</code></pre>",
+          "a": "What is ConnectHandler, with username and password?"
+        },
+        {
+          "q": "This specific condition must always wrap the disconnect() call to prevent a script from crashing if the connection was never established.<pre><code>if ___________:\n    net_connect.disconnect()</code></pre>",
+          "a": "What is if(net_connect)?"
+        },
+        {
+          "q": "What is the output of this Python snippet given interface 'GigabitEthernet1' is up?<pre><code>output = net_connect.send_command(\n    'show interfaces GigabitEthernet1',\n    use_textfsm=True\n)\nprint(output[0]['oper_status'])</code></pre>",
+          "a": "What is 'up'?"
+        },
+        {
+          "q": "In this Netmiko script, what method should replace the blank to push multiple config lines to a device?<pre><code>config_commands = [\n    'interface GigabitEthernet1',\n    'description WAN-LINK',\n    'no shutdown'\n]\nnet_connect.___________(config_commands)</code></pre>",
+          "a": "What is send_config_set()?"
+        },
+        {
+          "q": "What is the correct device_type string for a Cisco IOS XE device in this Netmiko connection dictionary?<pre><code>device = {\n    'device_type': '___________',\n    'host': '192.168.1.1',\n    'username': 'admin',\n    'password': 'Cisco123'\n}</code></pre>",
+          "a": "What is 'cisco_ios_xe'?"
+        }
+      ]
+    },
+    {
+      "name": "Terraform",
+      "questions": [
+        {
+          "q": "What block is missing to make this a valid Terraform configuration for the Cisco IOS XE provider?<pre><code>terraform {\n  ___________ {\n    iosxe = {\n      source  = \"cisco-devnet/iosxe\"\n      version = \"~> 0.3\"\n    }\n  }\n}</code></pre>",
+          "a": "What is required_providers?"
+        },
+        {
+          "q": "What keyword defines this reusable input in Terraform so it can be passed at runtime?<pre><code>___________ \"hostname\" {\n  type        = string\n  description = \"Device hostname\"\n  default     = \"router1\"\n}</code></pre>",
+          "a": "What is variable?"
+        },
+        {
+          "q": "How do you reference the variable defined below inside a Terraform resource block?<pre><code>variable \"mgmt_ip\" {\n  type = string\n}\n\nresource \"iosxe_interface\" \"mgmt\" {\n  host = ___________\n}</code></pre>",
+          "a": "What is var.mgmt_ip?"
+        },
+        {
+          "q": "What Terraform command would you run first to see what changes this config will make before applying it?<pre><code>resource \"iosxe_restconf\" \"ospf\" {\n  path = \"Cisco-IOS-XE-native:native/router/ospf\"\n  attributes = jsonencode({\n    \"Cisco-IOS-XE-ospf:process-id\" = 1\n  })\n}</code></pre>",
+          "a": "What is terraform plan?"
+        },
+        {
+          "q": "In this Terraform snippet, what is the correct syntax to reference the output of one resource inside another?<pre><code>resource \"iosxe_interface\" \"loopback\" {\n  name = \"Loopback0\"\n}\n\nresource \"iosxe_restconf\" \"router_id\" {\n  attributes = jsonencode({\n    id = ___________\n  })\n}</code></pre>",
+          "a": "What is iosxe_interface.loopback.name?"
+        }
+      ]
+    },
+    {
+      "name": "YANG & NETCONF",
+      "questions": [
+        {
+          "q": "When traversing this YANG tree to build a VPN config payload, what YANG module namespace must always prefix your container names?<pre><code>module: Cisco-IOS-XE-native\n  +--rw native\n     +--rw ip\n        +--rw vrf\n           +--rw definition* [name]\n              +--rw name    string\n              +--rw rd?     string</code></pre>",
+          "a": "What is Cisco-IOS-XE-native (NATIVE)?"
+        },
+        {
+          "q": "Based on this YANG tree snippet, what is the correct RESTCONF path to configure a VRF named 'MGMT'?<pre><code>module: Cisco-IOS-XE-native\n  +--rw native\n     +--rw ip\n        +--rw vrf\n           +--rw definition* [name]\n              +--rw name    string</code></pre>",
+          "a": "What is /restconf/data/Cisco-IOS-XE-native:native/ip/vrf/definition=MGMT?"
+        },
+        {
+          "q": "When building this NETCONF payload to configure a VPN from a YANG tree, what operation attribute tells the device to create the VRF only if it doesn't already exist?<pre><code>&lt;config&gt;\n  &lt;native xmlns=\"...native\"&gt;\n    &lt;vrf operation=\"___________\"&gt;\n      &lt;definition&gt;\n        &lt;name&gt;VPN-CORP&lt;/name&gt;\n      &lt;/definition&gt;\n    &lt;/vrf&gt;\n  &lt;/native&gt;\n&lt;/config&gt;</code></pre>",
+          "a": "What is merge?"
+        },
+        {
+          "q": "Given this YANG tree, what Python data structure correctly maps the VPN interface binding?<pre><code>+--rw vrf\n   +--rw definition* [name]\n      +--rw name         string\n      +--rw interface* [name]\n         +--rw name    string</code></pre>",
+          "a": "What is a nested dictionary with 'vrf' > 'definition' > list of interfaces?"
+        },
+        {
+          "q": "In YANG, the snippets in the tree use this symbol to indicate a configuration list whose entries are uniquely identified by a key value like 'name' or 'id'.<pre><code>+--rw definition* [name]\n+--rw neighbor*  [id]\n+--rw route*     [prefix]</code></pre>",
+          "a": "What is * (list node with a key)?"
+        }
+      ]
+    },
+    {
+      "name": "AI & MCP",
+      "questions": [
+        {
+          "q": "What are the three lines needed to create and run a minimal FastMCP server?<pre><code>from ___________ import FastMCP\n\nmcp = ___________('NetworkBot')\n\nmcp.run(___________)</code></pre>",
+          "a": "What is fastmcp, FastMCP(), and stdio?"
+        },
+        {
+          "q": "What decorator exposes this Python function as a callable tool that an AI agent can invoke via MCP?<pre><code>___________\ndef get_ospf_neighbors(device_ip: str) -> str:\n    \"\"\"Returns OSPF neighbor count for a device.\"\"\"\n    net_connect = ConnectHandler(...)\n    return net_connect.send_command('show ip ospf neighbor')</code></pre>",
+          "a": "What is @mcp.tool()?"
+        },
+        {
+          "q": "In LangChain, what naming convention do all chat model wrapper classes follow, and what method is used to send a prompt and get a response?<pre><code>from langchain_openai import ___________\n\nllm = ___________(model='gpt-4o')\nresponse = llm.___________([HumanMessage(content='Explain OSPF')])</code></pre>",
+          "a": "What is Chat[ModelName] (e.g. ChatOpenAI) and .invoke()?"
+        },
+        {
+          "q": "This decorator in FastMCP defines a reusable prompt template so an AI agent follows a fixed troubleshooting sequence, such as diagnosing CRC errors step by step.<pre><code>___________\ndef crc_troubleshoot(interface: str) -> str:\n    return f\"Check interface {interface}, then check cables...\"</code></pre>",
+          "a": "What is @mcp.prompt()?"
+        },
+        {
+          "q": "Looking at this FastMCP server skeleton, what is the correct transport argument to pass to run() so the server communicates over standard input/output with an MCP client?<pre><code>from fastmcp import FastMCP\nmcp = FastMCP('CiscoBot')\n\n@mcp.tool()\ndef get_bgp_summary(): ...\n\nif __name__ == '__main__':\n    mcp.run(transport='___________')</code></pre>",
+          "a": "What is stdio?"
+        }
+      ]
+    }
   ]
 }
