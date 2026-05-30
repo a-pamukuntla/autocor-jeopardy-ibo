@@ -648,6 +648,25 @@
             animation-delay: var(--qd, 0s);
             margin-right: 0.32em;
         }
+        
+        /* Code block styling in questions */
+        #question-text pre {
+            background: rgba(0, 0, 0, 0.4);
+            border: 2px solid #4a7cff;
+            border-radius: 8px;
+            padding: 12px 16px;
+            margin: 16px 0;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 1.4rem;
+            line-height: 1.6;
+        }
+        
+        #question-text code {
+            color: #a8ff60;
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+        }
         @keyframes qword-in {
             to { opacity: 1; transform: translateY(0) scale(1); }
         }
@@ -1176,6 +1195,14 @@
     function setQuestionAnimated(text) {
         const el = document.getElementById('question-text');
         el.innerHTML = '';
+        
+        // If text contains HTML (code blocks), render it directly without word-by-word animation
+        if (text.includes('<pre>') || text.includes('<code>')) {
+            el.innerHTML = text;
+            return;
+        }
+        
+        // Word-by-word animation for plain text
         String(text).split(/\s+/).forEach((w, i) => {
             const span = document.createElement('span');
             span.className = 'qw';
