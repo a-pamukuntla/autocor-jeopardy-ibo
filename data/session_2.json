@@ -6,12 +6,12 @@
     "q": "This JSON-based data modeling language is used to define the structure of data sent over NETCONF or RESTCONF.", 
     "a": "What is YANG?" },
   {
-    "q": "When using RESTCONF (RFC 8040) to modify a specific OSPF area ID within a YANG-modelled configuration, this HTTP method is used to merge the change into the existing data store without replacing the entire OSPF container.",
-    "a": "What is PATCH?"
+    "q": "What class and required parameters complete this Netmiko connection?<pre><code>from netmiko import ___________\n\nnet_connect = ___________( \n    device_type='cisco_ios',\n    host='10.10.10.1',\n    ___________='admin',\n    ___________='Cisco123'\n)</code></pre>",
+    "a": "What is ConnectHandler, with username and password?"
   },
   {
-    "q": "To prevent a Python automation script from hanging indefinitely when a network controller is unresponsive, this specific parameter should be included in every 'requests' library call to define a maximum wait time for a server response.",
-    "a": "What is timeout?"
+    "q": "When building this NETCONF payload to configure a VPN from a YANG tree, what operation attribute tells the device to create the VRF only if it doesn't already exist?<pre><code>&lt;config&gt;\n  &lt;native xmlns=\"...native\"&gt;\n    &lt;vrf operation=\"___________\"&gt;\n      &lt;definition&gt;\n        &lt;name&gt;VPN-CORP&lt;/name&gt;\n      &lt;/definition&gt;\n    &lt;/vrf&gt;\n  &lt;/native&gt;\n&lt;/config&gt;</code></pre>",
+    "a": "What is merge?"
   },
   {
     "q": "This Ansible command-line flag, often used alongside check mode, provides a side-by-side comparison of the current device configuration versus the proposed changes before they are committed to the network device.",
@@ -34,8 +34,8 @@
     "a": "What is the Source of Truth (SoT)?"
   },
   {
-    "q": "To move the HEAD of a local repository back to a previous commit and completely discard all uncommitted changes in the working directory, an engineer would use this command with a specific flag.",
-    "a": "What is git reset --hard?"
+    "q": "What Terraform command would you run first to see what changes this config will make before applying it?<pre><code>resource \"iosxe_restconf\" \"ospf\" {\n  path = \"Cisco-IOS-XE-native:native/router/ospf\"\n  attributes = jsonencode({\n    \"Cisco-IOS-XE-ospf:process-id\" = 1\n  })\n}</code></pre>",
+    "a": "What is terraform plan?"
   },
 
   {
@@ -43,8 +43,8 @@
     "a": "What is the post-validation stage?"
   },
   {
-    "q": "A YANG 'container' named 'system' contains a 'leaf' named 'hostname'. When representing this in YAML for an automation tool, the 'hostname' would be indented under 'system' and separated by this character.",
-    "a": "What is a colon (: )?"
+    "q": "In this Terraform snippet, what is the correct syntax to reference the output of one resource inside another?<pre><code>resource \"iosxe_interface\" \"loopback\" {\n  name = \"Loopback0\"\n}\n\nresource \"iosxe_restconf\" \"router_id\" {\n  attributes = jsonencode({\n    id = ___________\n  })\n}</code></pre>",
+    "a": "What is iosxe_interface.loopback.name?"
   }
     ]
   },
@@ -80,15 +80,16 @@
     "q": "When an AI agent provides a response that is grammatically correct and technically plausible but contains non-existent CLI commands or incorrect logic, the recommendation is suffering from this specific phenomenon.",
     "a": "What is a Hallucination?"
   },      
-  { "q": "This specific MCP server component acts as the 'bridge' to a specific Cisco API.", 
-    "a": "What is a Tool (or Resource)?" 
+  {
+    "q": "Looking at this FastMCP server skeleton, what is the correct transport argument to pass to run() so the server communicates over standard input/output with an MCP client?<pre><code>from fastmcp import FastMCP\nmcp = FastMCP('CiscoBot')\n\n@mcp.tool()\ndef get_bgp_summary(): ...\n\nif __name__ == '__main__':\n    mcp.run(transport='___________')</code></pre>",
+    "a": "What is stdio?"
   },
   {
-    "q": "To objectively measure the accuracy of an AI's troubleshooting advice, an engineer compares the AI's output against a verified dataset of known issues and their verified solutions, which is referred to as this.",
-    "a": "What is the Ground Truth?"
+    "q": "In LangChain, what naming convention do all chat model wrapper classes follow, and what method is used to send a prompt and get a response?<pre><code>from langchain_openai import ___________\n\nllm = ___________(model='gpt-4o')\nresponse = llm.___________([HumanMessage(content='Explain OSPF')])</code></pre>",
+    "a": "What is Chat[ModelName] (e.g. ChatOpenAI) and .invoke()?"
   },
   {
-    "q": "In a production FastMCP server, this specific decorator is used to define a Prompt Template, allowing the agent to follow a pre-defined sequence of troubleshooting steps for a common issue like a CRC Error.",
+    "q": "This decorator in FastMCP defines a reusable prompt template so an AI agent follows a fixed troubleshooting sequence, such as diagnosing CRC errors step by step.<pre><code>___________\ndef crc_troubleshoot(interface: str) -> str:\n    return f\"Check interface {interface}, then check cables...\"</code></pre>",
     "a": "What is @mcp.prompt()?"
   },
     {
