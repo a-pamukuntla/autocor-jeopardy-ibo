@@ -1,102 +1,135 @@
-[
-  {
-    "name": "VLANs and Switching",
-    "questions": [
+{
+  "finalJeopardy": {
+    "q": "Match each AUTOCOR concept to its best description",
+    "a": "ConnectHandler|if net_connect|required_providers|Cisco-IOS-XE-native|mcp.run(\"stdio\")",
+    "pairs": [
       {
-        "q": "This VLAN type carries user traffic.",
-        "a": "What is a data VLAN?"
+        "id": 0,
+        "term": "ConnectHandler",
+        "def": "Netmiko constructor used to establish a device session with credentials"
       },
       {
-        "q": "This command sets a port to trunk mode.",
-        "a": "What is switchport mode trunk?"
+        "id": 1,
+        "term": "if net_connect",
+        "def": "Guard condition used before disconnect() to avoid crashing when no session exists"
       },
       {
-        "q": "This VLAN is used to carry management traffic.",
-        "a": "What is the management VLAN?"
+        "id": 2,
+        "term": "required_providers",
+        "def": "Terraform block that declares provider source and version constraints"
       },
       {
-        "q": "This protocol advertises VLAN information between switches.",
-        "a": "What is VTP?"
+        "id": 3,
+        "term": "Cisco-IOS-XE-native",
+        "def": "YANG namespace prefix used when traversing native IOS XE configuration trees"
       },
       {
-        "q": "This feature allows multiple physical links to act as one logical link.",
-        "a": "What is EtherChannel?"
+        "id": 4,
+        "term": "mcp.run(\"stdio\")",
+        "def": "FastMCP startup mode that communicates over standard input/output"
       }
     ]
   },
-  {
-    "name": "Network Services",
-    "questions": [
-      {
-        "q": "This service resolves hostnames to IP addresses.",
-        "a": "What is DNS?"
-      },
-      {
-        "q": "This service synchronizes time across network devices.",
-        "a": "What is NTP?"
-      },
-      {
-        "q": "This protocol transfers files between devices.",
-        "a": "What is FTP?"
-      },
-      {
-        "q": "This secure version of HTTP encrypts web traffic.",
-        "a": "What is HTTPS?"
-      },
-      {
-        "q": "This service dynamically assigns IP configuration to clients.",
-        "a": "What is DHCP?"
-      }
-    ]
-  },
-  {
-    "name": "Cisco Cybersecurity",
-    "questions": [
-      {
-        "q": "This term describes verifying a user's identity.",
-        "a": "What is authentication?"
-      },
-      {
-        "q": "This term describes granting permissions to resources.",
-        "a": "What is authorization?"
-      },
-      {
-        "q": "This term describes tracking user activity.",
-        "a": "What is accounting?"
-      },
-      {
-        "q": "These three processes together form a common security framework.",
-        "a": "What is AAA?"
-      },
-      {
-        "q": "This attack intercepts communication between two parties.",
-        "a": "What is a man-in-the-middle attack?"
-      }
-    ]
-  },
-  {
-    "name": "Cisco History",
-    "questions": [
-      {
-        "q": "This Cisco operating system runs on routers and switches.",
-        "a": "What is IOS?"
-      },
-      {
-        "q": "This annual event brings Cisco customers and partners together worldwide.",
-        "a": "What is Cisco Live?"
-      },
-      {
-        "q": "This city is home to Cisco headquarters.",
-        "a": "What is San Jose?"
-      },
-      {
-        "q": "This company was founded in 1984 and is known for networking equipment.",
-        "a": "What is Cisco?"
-      },
-      {
-        "q": "This CEO led Cisco from 1995 to 2015.",
-        "a": "Who is John Chambers?"
-      }
-    ]
-  }
-]
+  "categories": [
+    {
+      "name": "Network Automation",
+      "questions": [
+        {
+          "q": "In this Netmiko skeleton, what function establishes the SSH session?<pre><code>from netmiko import ___________\n\nnet_connect = ___________(\n  device_type='cisco_ios',\n  host='10.10.10.11',\n  username='admin',\n  password='Cisco123!'\n)</code></pre>",
+          "a": "What is ConnectHandler?"
+        },
+        {
+          "q": "What method should replace the blank to push multiple lines in one transaction?<pre><code>commands = [\n  'interface GigabitEthernet1',\n  'description WAN-LINK',\n  'no shutdown'\n]\nnet_connect.___________(commands)</code></pre>",
+          "a": "What is send_config_set()?"
+        },
+        {
+          "q": "For safe session cleanup, what condition should wrap disconnect() according to best practice?<pre><code>if ___________:\n  net_connect.disconnect()</code></pre>",
+          "a": "What is if(net_connect)?"
+        },
+        {
+          "q": "Given this YANG tree, what namespace prefix is required in the RESTCONF path?<pre><code>module: Cisco-IOS-XE-native\n  +--rw native\n     +--rw ip\n        +--rw vrf\n           +--rw definition* [name]</code></pre>",
+          "a": "What is Cisco-IOS-XE-native (NATIVE)?"
+        },
+        {
+          "q": "What is the correct RESTCONF path to configure VRF BLUE from this tree?<pre><code>module: Cisco-IOS-XE-native\n  +--rw native\n     +--rw ip\n        +--rw vrf\n           +--rw definition* [name]</code></pre>",
+          "a": "What is /restconf/data/Cisco-IOS-XE-native:native/ip/vrf/definition=BLUE?"
+        }
+      ]
+    },
+    {
+      "name": "Infrastructure as Code",
+      "questions": [
+        {
+          "q": "What Terraform block imports and pins providers correctly?<pre><code>terraform {\n  ___________ {\n    iosxe = {\n      source  = 'cisco-devnet/iosxe'\n      version = '~> 0.3'\n    }\n  }\n}</code></pre>",
+          "a": "What is required_providers?"
+        },
+        {
+          "q": "What keyword defines a reusable input variable?<pre><code>___________ 'hostname' {\n  type    = string\n  default = 'edge-rtr-01'\n}</code></pre>",
+          "a": "What is variable?"
+        },
+        {
+          "q": "Which expression correctly references a variable named mgmt_ip?<pre><code>resource 'iosxe_restconf' 'loop0' {\n  host = ___________\n}</code></pre>",
+          "a": "What is var.mgmt_ip?"
+        },
+        {
+          "q": "You need to preview all proposed changes before touching the network. Which command should run first?",
+          "a": "What is terraform plan?"
+        },
+        {
+          "q": "A production hotfix was committed to the wrong feature branch. Which Git command applies only that one commit onto main without merging everything?",
+          "a": "What is git cherry-pick?"
+        }
+      ]
+    },
+    {
+      "name": "Operations",
+      "questions": [
+        {
+          "q": "In model-driven telemetry dial-out designs, which protocol is commonly used for efficient streaming transport?",
+          "a": "What is gRPC?"
+        },
+        {
+          "q": "For real-time incident messages to collaboration tools, which logging destination style is most appropriate?",
+          "a": "What is a webhook destination?"
+        },
+        {
+          "q": "Which pyATS CLI command is typically used to capture operational state snapshots for change validation?",
+          "a": "What is pyats learn?"
+        },
+        {
+          "q": "To meet secure coding requirements, where should API tokens be sourced instead of hardcoding them in scripts?",
+          "a": "What are environment variables or a secrets manager?"
+        },
+        {
+          "q": "Before a device can use HTTPS with organizational trust, what must first be generated and sent to a CA?",
+          "a": "What is a Certificate Signing Request (CSR)?"
+        }
+      ]
+    },
+    {
+      "name": "AI in Automation",
+      "questions": [
+        {
+          "q": "Fill the blanks to create and run a minimal FastMCP server over stdio.<pre><code>from ___________ import FastMCP\n\nmcp = ___________('AutoCorBot')\n\nmcp.run('___________')</code></pre>",
+          "a": "What is fastmcp, FastMCP(), and stdio?"
+        },
+        {
+          "q": "Which decorator exposes a Python function as a callable MCP tool?<pre><code>___________\ndef get_ospf_neighbors(device_ip: str) -> str:\n  ...</code></pre>",
+          "a": "What is @mcp.tool()?"
+        },
+        {
+          "q": "In LangChain, chat model classes follow what naming convention, and what method sends prompts?<pre><code>from langchain_openai import ___________\n\nllm = ChatOpenAI(model='gpt-4o')\nresponse = llm.___________('Summarize OSPF adjacency state')</code></pre>",
+          "a": "What is Chat* naming and .invoke()?"
+        },
+        {
+          "q": "A stem includes both privacy risk and ownership ambiguity in generated code. Which exam objective area is being tested?",
+          "a": "What is AI-assisted code development risks and benefits evaluation?"
+        },
+        {
+          "q": "When reading AI security stems, where are key clues usually found according to exam strategy notes?",
+          "a": "What is in the wording of the question stem itself?"
+        }
+      ]
+    }
+  ]
+}
