@@ -1124,7 +1124,7 @@
             }
         } catch (e) {
             console.error('Init error:', e);
-            document.getElementById('game-board').innerHTML = `<h2>Error loading game</h2><p>${e.message}</p><p>Check browser console for details.</p>`;
+            document.getElementById('game-board').innerHTML = `<h2>Error loading game</h2><p>${e.message}</p><p>Check browser console (F12) for full error details.</p><p style="font-size: 12px; margin-top: 20px; color: #999;">Error details: ${e.toString()}</p>`;
         }
     }
 
