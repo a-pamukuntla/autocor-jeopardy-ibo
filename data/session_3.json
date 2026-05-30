@@ -1,4 +1,16 @@
-[
+{
+  "finalJeopardy": {
+    "q": "Match each networking term to its correct description.",
+    "a": "get-config=retrieve full config | ncclient=NETCONF Python library | FROM=Dockerfile base image | git commit=move to local repo | Drift Detection=compare to golden baseline",
+    "pairs": [
+      { "id": 0, "term": "<get-config>",      "def": "NETCONF operation used to retrieve the entire configuration of a device" },
+      { "id": 1, "term": "ncclient",          "def": "Industry-standard Python library for interacting with NETCONF devices" },
+      { "id": 2, "term": "FROM",              "def": "Dockerfile instruction that defines the base image to start from" },
+      { "id": 3, "term": "git commit",        "def": "Git command that moves changes from the staging area to the local repository" },
+      { "id": 4, "term": "Drift Detection",   "def": "Process of comparing a device's current config to its golden baseline" }
+    ]
+  },
+  "categories": [
   {
     "name": "Network Automation",
     "questions": [
@@ -39,4 +51,5 @@
       { "q": "This AI role acts as an 'orchestrator' that decides which network tool to call based on a user's request.", "a": "What is an AI Agent?" }
     ]
   }
-]
+  ]
+}

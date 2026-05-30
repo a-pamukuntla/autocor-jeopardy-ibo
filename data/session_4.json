@@ -1,4 +1,16 @@
-[
+{
+  "finalJeopardy": {
+    "q": "Match each MCP and Netmiko term to its correct description.",
+    "a": "@mcp.tool()=expose function as tool | FastMCP=MCP server framework | mcp.run(stdio)=start server over stdio | ConnectHandler()=Netmiko SSH class | if net_connect:=disconnect guard",
+    "pairs": [
+      { "id": 0, "term": "@mcp.tool()",       "def": "Decorator that exposes a Python function as a callable tool the AI agent can invoke" },
+      { "id": 1, "term": "FastMCP",           "def": "Python framework used to build a Model Context Protocol server" },
+      { "id": 2, "term": "mcp.run(stdio)",    "def": "Starts the MCP server and listens for JSON-RPC messages over standard input/output" },
+      { "id": 3, "term": "ConnectHandler()",  "def": "Netmiko class used to establish an SSH connection to a network device" },
+      { "id": 4, "term": "if net_connect:",   "def": "Required guard condition that must wrap disconnect() to prevent a script crash" }
+    ]
+  },
+  "categories": [
   {
     "name": "Netmiko & Python",
     "questions": [
@@ -99,4 +111,5 @@
       }
     ]
   }
-]
+  ]
+}
