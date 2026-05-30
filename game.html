@@ -1064,9 +1064,15 @@
     }
 
     async function loadConfig() {
-        const res = await fetch('./config.json', { cache: 'no-cache' });
-        const config = await res.json();
-        applyConfig(config);
+        try {
+            const res = await fetch('./config.json', { cache: 'no-cache' });
+            if (!res.ok) throw new Error(`Config fetch failed: ${res.status} ${res.statusText}`);
+            const config = await res.json();
+            applyConfig(config);
+        } catch (e) {
+            console.error('loadConfig error:', e);
+            throw e;
+        }
     }
 
     const MQTT_BROKER = 'wss://broker.emqx.io:8084/mqtt';
@@ -1098,6 +1104,7 @@
                 loadConfig(),
                 fetch(`./data/${board}.json`)
             ]);
+            if (!boardRes.ok) throw new Error(`Board fetch failed: ${boardRes.status} ${boardRes.statusText} (./data/${board}.json)`);
             const boardData = await boardRes.json();
             if (boardData.finalJeopardy) {
                 if (!finalJeopardyQuestion) finalJeopardyQuestion = boardData.finalJeopardy.q || '';
@@ -1116,8 +1123,8 @@
                 initRendered = true;
             }
         } catch (e) {
-            console.error(e);
-            document.getElementById('game-board').innerHTML = "<h2>Error loading config or game data. Check config.json and /data/ folder.</h2>";
+            console.error('Init error:', e);
+            document.getElementById('game-board').innerHTML = `<h2>Error loading game</h2><p>${e.message}</p><p>Check browser console for details.</p>`;
         }
     }
 
