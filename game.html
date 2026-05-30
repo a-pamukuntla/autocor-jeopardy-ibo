@@ -653,23 +653,22 @@
         }
 
         /* === DRAG & DROP FINAL JEOPARDY === */
-        #drag-drop-area { display: none; margin: 20px 0; text-align: left; }
-        #drag-drop-area .dd-prompt { color: gold; font-size: 1.3rem; font-weight: bold; margin-bottom: 12px; text-align: center; }
-        #drag-drop-area .dd-hint { color: #aaa; font-size: 0.95rem; text-align: center; margin-bottom: 18px; }
-        .dd-bank { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; min-height: 60px; padding: 12px; background: rgba(255,255,255,0.05); border: 2px dashed #555; border-radius: 10px; margin-bottom: 14px; }
-        .dd-zone { min-height: 280px; padding: 12px; background: rgba(0,0,80,0.5); border: 2px dashed #049fd9; border-radius: 10px; margin-bottom: 14px; display: flex; flex-direction: column; gap: 8px; }
+        #drag-drop-area { display: none; margin: 20px 0; }
+        #drag-drop-area .dd-prompt { color: gold; font-size: 1.4rem; font-weight: bold; margin-bottom: 6px; text-align: center; }
+        #drag-drop-area .dd-hint { color: #aaa; font-size: 0.95rem; text-align: center; margin-bottom: 16px; }
+        .dd-columns { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; align-items: start; }
+        .dd-col-header { color: #049fd9; font-size: 1rem; font-weight: bold; text-align: center; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1px; }
+        .dd-bank { display: flex; flex-direction: column; gap: 8px; min-height: 300px; padding: 12px; background: rgba(255,255,255,0.04); border: 2px dashed #555; border-radius: 10px; }
+        .dd-zone { display: flex; flex-direction: column; gap: 8px; min-height: 300px; padding: 12px; background: rgba(0,0,80,0.5); border: 2px dashed #049fd9; border-radius: 10px; }
+        .dd-bank.drag-over { background: rgba(255,255,255,0.08); border-color: #aaa; }
         .dd-zone.drag-over { background: rgba(4,159,217,0.15); border-color: gold; }
-        .dd-block { font-family: 'Courier New', monospace; font-size: 1.1rem; color: #00ff99; background: #000; border: 2px solid #333; border-radius: 6px; padding: 10px 16px; cursor: grab; user-select: none; transition: transform 0.15s, box-shadow 0.15s; white-space: pre; }
-        .dd-block:hover { transform: scale(1.03); box-shadow: 0 4px 15px rgba(0,255,153,0.3); border-color: #00ff99; }
+        .dd-block { font-family: 'Courier New', monospace; font-size: 1rem; color: #00ff99; background: #000; border: 2px solid #333; border-radius: 6px; padding: 9px 14px; cursor: grab; user-select: none; transition: transform 0.15s, box-shadow 0.15s; white-space: pre; }
+        .dd-block:hover { transform: scale(1.02); box-shadow: 0 4px 15px rgba(0,255,153,0.3); border-color: #00ff99; }
         .dd-block.dragging { opacity: 0.4; cursor: grabbing; }
-        .dd-block.correct-slot { border-color: #28a745; box-shadow: 0 0 10px rgba(40,167,69,0.5); }
-        .dd-block.wrong-slot { border-color: #dc3545; box-shadow: 0 0 10px rgba(220,53,69,0.5); animation: shake 0.3s; }
-        @keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-6px)} 75%{transform:translateX(6px)} }
-        .dd-labels { display: flex; justify-content: space-between; font-size: 0.85rem; color: #888; margin-bottom: 4px; padding: 0 4px; }
-        #dd-check-btn { background: #049fd9; color: white; border: none; padding: 12px 35px; font-size: 1.2rem; font-weight: bold; border-radius: 8px; cursor: pointer; margin: 6px; }
-        #dd-check-btn:hover { background: #0db8ff; }
-        #dd-reset-btn { background: #555; color: white; border: none; padding: 12px 35px; font-size: 1.2rem; font-weight: bold; border-radius: 8px; cursor: pointer; margin: 6px; }
-        #dd-result { margin-top: 12px; font-size: 1.4rem; font-weight: bold; text-align: center; min-height: 2rem; }
+        .dd-zone .dd-block { border-left: 4px solid #049fd9; }
+        .dd-zone-counter { color: #555; font-size: 0.85rem; text-align: center; margin-top: 8px; }
+        #dd-reset-btn { display: block; margin: 14px auto 0; background: #555; color: white; border: none; padding: 10px 30px; font-size: 1.1rem; font-weight: bold; border-radius: 8px; cursor: pointer; }
+        #dd-reset-btn:hover { background: #777; }
 
         #modal-buzzer-indicator {
             display: none;
@@ -955,17 +954,20 @@
         <div id="question-text"></div>
 
         <div id="drag-drop-area">
-            <div class="dd-prompt">🧩 FINAL JEOPARDY — Arrange these code blocks into a working FastMCP server</div>
-            <div class="dd-hint">Drag blocks from the bank into the correct order in the drop zone</div>
-            <div class="dd-labels"><span>📦 Code Bank</span><span>drag to move blocks back</span></div>
-            <div class="dd-bank" id="dd-bank"></div>
-            <div class="dd-labels"><span>📋 Drop Zone (top = first line)</span></div>
-            <div class="dd-zone" id="dd-zone"></div>
-            <div style="text-align:center">
-                <button id="dd-check-btn" onclick="checkDragDrop()">✓ CHECK ORDER</button>
-                <button id="dd-reset-btn" onclick="resetDragDrop()">↺ RESET</button>
+            <div class="dd-prompt">🧩 FINAL JEOPARDY — Build a working FastMCP server</div>
+            <div class="dd-hint">Players: write your answer on paper. Host: drag blocks to reveal the correct order.</div>
+            <div class="dd-columns">
+                <div>
+                    <div class="dd-col-header">📦 Options</div>
+                    <div class="dd-bank" id="dd-bank"></div>
+                </div>
+                <div>
+                    <div class="dd-col-header">📋 Correct Order</div>
+                    <div class="dd-zone" id="dd-zone"></div>
+                    <div class="dd-zone-counter" id="dd-counter">0 / 17 blocks placed</div>
+                </div>
             </div>
-            <div id="dd-result"></div>
+            <button id="dd-reset-btn" onclick="resetDragDrop()">↺ RESET</button>
         </div>
 
         <div id="modal-buzzer-indicator">
@@ -1558,13 +1560,18 @@
     const DD_CORRECT_ORDER = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16];
     let ddDragging = null;
 
+    function updateDDCounter() {
+        const count = document.getElementById('dd-zone').querySelectorAll('.dd-block').length;
+        document.getElementById('dd-counter').textContent = `${count} / ${DD_BLOCKS.length} blocks placed`;
+    }
+
     function initDragDrop() {
         const bank = document.getElementById('dd-bank');
         const zone = document.getElementById('dd-zone');
         bank.innerHTML = '';
         zone.innerHTML = '';
-        document.getElementById('dd-result').textContent = '';
-        // shuffle all blocks + distractors into bank
+        updateDDCounter();
+        // Shuffle all blocks + distractors into left bank
         const all = [...DD_BLOCKS, ...DD_DISTRACTORS].sort(() => Math.random() - 0.5);
         all.forEach(b => bank.appendChild(makeDDBlock(b)));
         [bank, zone].forEach(el => {
@@ -1576,6 +1583,7 @@
                 if (ddDragging) {
                     el.appendChild(ddDragging);
                     ddDragging = null;
+                    updateDDCounter();
                 }
             });
         });
@@ -1590,39 +1598,6 @@
         div.addEventListener('dragstart', () => { ddDragging = div; div.classList.add('dragging'); });
         div.addEventListener('dragend', () => div.classList.remove('dragging'));
         return div;
-    }
-
-    function checkDragDrop() {
-        const zone = document.getElementById('dd-zone');
-        const placed = [...zone.querySelectorAll('.dd-block')];
-        const result = document.getElementById('dd-result');
-        // Remove distractor ids from correct check
-        const validIds = placed.map(b => parseInt(b.dataset.id)).filter(id => id < 90);
-        const distCount = placed.filter(b => parseInt(b.dataset.id) >= 90).length;
-        if (distCount > 0) {
-            result.style.color = '#dc3545';
-            result.textContent = '❌ You have distractor blocks in your answer — remove them!';
-            placed.filter(b => parseInt(b.dataset.id) >= 90).forEach(b => b.classList.add('wrong-slot'));
-            return;
-        }
-        if (validIds.length !== DD_CORRECT_ORDER.length) {
-            result.style.color = '#ffc107';
-            result.textContent = `⚠️ You have ${validIds.length} of ${DD_CORRECT_ORDER.length} required blocks placed.`;
-            return;
-        }
-        const isCorrect = validIds.every((id, i) => id === DD_CORRECT_ORDER[i]);
-        if (isCorrect) {
-            result.style.color = '#28a745';
-            result.textContent = '✅ CORRECT! Perfect FastMCP server — full points!';
-            placed.forEach(b => b.classList.add('correct-slot'));
-        } else {
-            result.style.color = '#dc3545';
-            result.textContent = '❌ Wrong order — check your MCP structure and try again!';
-            placed.forEach((b, i) => {
-                b.classList.remove('correct-slot', 'wrong-slot');
-                b.classList.add(parseInt(b.dataset.id) === DD_CORRECT_ORDER[i] ? 'correct-slot' : 'wrong-slot');
-            });
-        }
     }
 
     function resetDragDrop() { initDragDrop(); }
