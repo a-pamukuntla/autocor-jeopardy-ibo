@@ -43,16 +43,16 @@
           "a": "What is the Content-Type header?"
         },
         {
-          "q": "This Terraform command applies changes to reach the desired state, effectively 'pushing' config.",
-          "a": "What is terraform apply?"
+          "q": "In this Netmiko script, what method should replace the blank to push multiple config lines to a device?<pre><code>config_commands = [\n    'interface GigabitEthernet1',\n    'description WAN-LINK',\n    'no shutdown'\n]\nnet_connect.___________(config_commands)</code></pre>",
+          "a": "What is send_config_set()?"
         },
         {
-          "q": "This Ansible module ensures a specific configuration line exists in a Cisco IOS XE device's running config.",
-          "a": "What is ios_config?"
+          "q": "When traversing this YANG tree to build a VPN config payload, what YANG module namespace must always prefix your container names?<pre><code>module: Cisco-IOS-XE-native\n  +--rw native\n     +--rw ip\n        +--rw vrf\n           +--rw definition* [name]\n              +--rw name    string\n              +--rw rd?     string</code></pre>",
+          "a": "What is Cisco-IOS-XE-native (NATIVE)?"
         },
         {
-          "q": "An enterprise requires a solution where network devices independently pull their configuration from a central Git repository and apply it locally. This specific automation model is chosen to ensure continuous compliance and high scalability without a central push-based controller.",
-          "a": "What is a Pull-based (or GitOps) model?"
+          "q": "Based on this YANG tree snippet, what is the correct RESTCONF path to configure a VRF named 'MGMT'?<pre><code>module: Cisco-IOS-XE-native\n  +--rw native\n     +--rw ip\n        +--rw vrf\n           +--rw definition* [name]\n              +--rw name    string</code></pre>",
+          "a": "What is /restconf/data/Cisco-IOS-XE-native:native/ip/vrf/definition=MGMT?"
         }
       ]
     },
@@ -60,12 +60,12 @@
       "name": "Infrastructure as Code",
       "questions": [
         {
-          "q": "This Git command is used to switch between different branches in a repository, allowing an engineer to move from a 'development' branch to a 'production' branch to review code.",
-          "a": "What is git checkout?"
+          "q": "What block is missing to make this a valid Terraform configuration for the Cisco IOS XE provider?<pre><code>terraform {\n  ___________ {\n    iosxe = {\n      source  = \"cisco-devnet/iosxe\"\n      version = \"~> 0.3\"\n    }\n  }\n}</code></pre>",
+          "a": "What is required_providers?"
         },
         {
-          "q": "In a Docker Compose file, this specific parameter is used to map a local directory on the host machine to a directory inside the container, ensuring that configuration data or 'Source of Truth' files remain persistent even if the container is restarted.",
-          "a": "What is a volume?"
+          "q": "What keyword defines this reusable input in Terraform so it can be passed at runtime?<pre><code>___________ \"hostname\" {\n  type        = string\n  description = \"Device hostname\"\n  default     = \"router1\"\n}</code></pre>",
+          "a": "What is variable?"
         },
         {
           "q": "In a GitLab CI/CD pipeline, this specific stage is responsible for preparing the environment, such as installing necessary Python libraries or pulling Docker images, before any tests or deployments are executed.",
@@ -118,15 +118,15 @@
           "a": "What is RAG (Retrieval-Augmented Generation)?"
         },
         {
-          "q": "In an MCP architecture, this specific component is the 'host' application (like a CLI tool or a web app) that actually initiates the connection to the MCP server to provide context to the LLM.",
-          "a": "What is the MCP Client?"
+          "q": "What are the three lines needed to create and run a minimal FastMCP server?<pre><code>from ___________ import FastMCP\n\nmcp = ___________('NetworkBot')\n\nmcp.run(___________)</code></pre>",
+          "a": "What is fastmcp, FastMCP(), and stdio?"
         },
         {
           "q": "During a security audit of an AI-driven SOC, it is discovered that the model can be tricked into ignoring malicious traffic by appending specific ignore strings to log entries. This is an example of this specific vulnerability.",
           "a": "What is Prompt Injection (Adversarial Attack)"
         },
         {
-          "q": "In a Python FastMCP implementation, this specific decorator is used to define a function that an AI agent can call to retrieve live interface statistics from a Cisco Catalyst switch.",
+          "q": "What decorator exposes this Python function as a callable tool that an AI agent can invoke via MCP?<pre><code>___________\ndef get_ospf_neighbors(device_ip: str) -> str:\n    \"\"\"Returns OSPF neighbor count for a device.\"\"\"\n    net_connect = ConnectHandler(...)\n    return net_connect.send_command('show ip ospf neighbor')</code></pre>",
           "a": "What is @mcp.tool()?"
         }
       ]
