@@ -43,8 +43,8 @@
           "a": "What is the Content-Type header?"
         },
         {
-          "q": "You need to apply an ordered list of interface configuration commands in config mode. Which Netmiko method fits this intent?<pre><code>config_commands = [\n    'interface GigabitEthernet1',\n    'description WAN-LINK',\n    'no shutdown'\n]\n# intent: send all config lines as a single config transaction\nnet_connect.___________(config_commands)</code></pre>",
-          "a": "What is send_config_set()?"
+          "q": "Fill in the blanks to complete this Netmiko script for connection and safe disconnect.<pre><code>from netmiko import ___________\n\nnet_connect = ___________(\n    device_type='cisco_ios',\n    host='10.10.10.1',\n    username='admin',\n    password='Cisco123!'\n)\n\n# ... run commands ...\n\nif ___________:\n    net_connect.disconnect()</code></pre>",
+          "a": "What is ConnectHandler, ConnectHandler, and net_connect?"
         },
         {
           "q": "When traversing this YANG tree to build a VPN config payload, what YANG module namespace must always prefix your container names?<pre><code>module: Cisco-IOS-XE-native\n  +--rw native\n     +--rw ip\n        +--rw vrf\n           +--rw definition* [name]\n              +--rw name    string\n              +--rw rd?     string</code></pre>",
