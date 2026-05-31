@@ -51,8 +51,8 @@
           "a": "What is Cisco-IOS-XE-native (NATIVE)?"
         },
         {
-          "q": "Based on this YANG tree snippet, what is the correct RESTCONF path to configure a VRF named 'MGMT'?<pre><code>module: Cisco-IOS-XE-native\n  +--rw native\n     +--rw ip\n        +--rw vrf\n           +--rw definition* [name]\n              +--rw name    string</code></pre>",
-          "a": "What is /restconf/data/Cisco-IOS-XE-native:native/ip/vrf/definition=MGMT?"
+          "q": "Fill in the most important blank in this RESTCONF path for a VRF named 'MGMT' based on the YANG tree.<pre><code>module: Cisco-IOS-XE-native\n  +--rw native\n     +--rw ip\n        +--rw vrf\n           +--rw definition* [name]\n              +--rw name    string\n\n/restconf/data/___________/ip/vrf/definition=MGMT</code></pre>",
+          "a": "What is Cisco-IOS-XE-native:native?"
         }
       ]
     },
