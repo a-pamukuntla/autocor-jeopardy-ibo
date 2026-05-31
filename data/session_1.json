@@ -127,7 +127,7 @@
         },
                 {
           "q": "In this LangChain snippet, what class naming pattern and method complete the call flow?<pre><code>from langchain_openai import ___________\n\nllm = ChatOpenAI(model='gpt-4o')\nresponse = llm.___________('Summarize OSPF adjacency state')</code></pre>",
-          "a": "What is Chat* naming and .invoke()?"
+          "a": "What is ChatOpenAI and .invoke()?"
         }
       ]
     }
