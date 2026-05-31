@@ -64,8 +64,8 @@
           "a": "What is required_providers?"
         },
         {
-          "q": "What keyword defines this reusable input in Terraform so it can be passed at runtime?<pre><code>___________ \"hostname\" {\n  type        = string\n  description = \"Device hostname\"\n  default     = \"router1\"\n}</code></pre>",
-          "a": "What is variable?"
+          "q": "In this Ansible playbook, what keyword loads reusable variables from an external YAML file?<pre><code>- hosts: edge_routers\n  gather_facts: no\n  ___________:\n    - vars/common.yml\n  tasks:\n    - name: Push loopback config\n      cisco.ios.ios_config:\n        lines:\n          - description MGMT</code></pre>",
+          "a": "What is vars_files?"
         },
         {
           "q": "In a GitLab CI/CD pipeline, this specific stage is responsible for preparing the environment, such as installing necessary Python libraries or pulling Docker images, before any tests or deployments are executed.",
