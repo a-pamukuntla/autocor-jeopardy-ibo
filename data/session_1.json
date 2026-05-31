@@ -1,32 +1,32 @@
 {
   "finalJeopardy": {
-    "q": "Match each concept to its description",
-    "a": "Idempotency|ios_config|terraform apply|Pull-based model|RESTCONF Content-Type header",
+    "q": "Match each code pattern to its purpose",
+    "a": "@mcp.tool()|FastMCP|mcp.run(stdio)|ConnectHandler()|if net_connect guard",
     "pairs": [
       {
         "id": 0,
-        "term": "Idempotency",
-        "def": "Ensures re-running config against desired state results in no changes"
+        "term": "@mcp.tool()",
+        "def": "Decorator to expose Python function as MCP tool for AI agents"
       },
       {
         "id": 1,
-        "term": "ios_config",
-        "def": "Ansible module that ensures a specific configuration line exists in Cisco IOS XE"
+        "term": "FastMCP",
+        "def": "Lightweight Python framework for building MCP servers"
       },
       {
         "id": 2,
-        "term": "terraform apply",
-        "def": "Terraform command that applies changes to reach the desired state"
+        "term": "mcp.run(stdio)",
+        "def": "FastMCP method to run server over standard I/O"
       },
       {
         "id": 3,
-        "term": "Pull-based model",
-        "def": "Network devices independently pull config from central Git repository"
+        "term": "ConnectHandler()",
+        "def": "Netmiko function to establish device connection"
       },
       {
         "id": 4,
-        "term": "RESTCONF Content-Type",
-        "def": "Must be set to 'application/yang-data+json' for proper YANG mapping"
+        "term": "if net_connect guard",
+        "def": "Safety check ensuring connection is established before use"
       }
     ]
   },
@@ -110,16 +110,8 @@
       "name": "AI in Automation",
       "questions": [
         {
-          "q": "To provide a conversational agent with real-time OSPF neighbor counts without exposing the entire database, an engineer builds this specific server type, which acts as a standardized interface between the LLM and the network API.",
-          "a": "What is an MCP (Model Context Protocol) Server?"
-        },
-        {
-          "q": "This specific architectural pattern is used to 'ground' a conversational agent's responses in real-world network data by fetching relevant logs or configs before the LLM generates an answer, preventing hallucinations.",
+          "q": "This architectural pattern fetches real-world network data (like logs or configs) before passing it to an LLM, grounding the response and preventing hallucinations.",
           "a": "What is RAG (Retrieval-Augmented Generation)?"
-        },
-        {
-          "q": "What are the three lines needed to create and run a minimal FastMCP server?<pre><code>from ___________ import FastMCP\n\nmcp = ___________('NetworkBot')\n\nmcp.run(___________)</code></pre>",
-          "a": "What is fastmcp, FastMCP(), and stdio?"
         },
         {
           "q": "During a security audit of an AI-driven SOC, it is discovered that the model can be tricked into ignoring malicious traffic by appending specific ignore strings to log entries. This is an example of this specific vulnerability.",
@@ -128,6 +120,14 @@
         {
           "q": "What decorator exposes this Python function as a callable tool that an AI agent can invoke via MCP?<pre><code>___________\ndef get_ospf_neighbors(device_ip: str) -> str:\n    \"\"\"Returns OSPF neighbor count for a device.\"\"\"\n    net_connect = ConnectHandler(...)\n    return net_connect.send_command('show ip ospf neighbor')</code></pre>",
           "a": "What is @mcp.tool()?"
+        },
+        {
+          "q": "What are the three lines needed to create and run a minimal FastMCP server?<pre><code>from ___________ import FastMCP\n\nmcp = ___________('NetworkBot')\n\nmcp.run(___________)</code></pre>",
+          "a": "What is fastmcp, FastMCP(), and stdio?"
+        },
+                {
+          "q": "In this LangChain snippet, what class naming pattern and method complete the call flow?<pre><code>from langchain_openai import ___________\n\nllm = ChatOpenAI(model='gpt-4o')\nresponse = llm.___________('Summarize OSPF adjacency state')</code></pre>",
+          "a": "What is Chat* naming and .invoke()?"
         }
       ]
     }
