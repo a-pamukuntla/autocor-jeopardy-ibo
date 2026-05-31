@@ -64,8 +64,8 @@
           "a": "What is required_providers?"
         },
         {
-          "q": "In this Ansible playbook, what keyword loads reusable variables from an external YAML file?<pre><code>- hosts: edge_routers\n  gather_facts: no\n  ___________:\n    - vars/common.yml\n  tasks:\n    - name: Push loopback config\n      cisco.ios.ios_config:\n        lines:\n          - description MGMT</code></pre>",
-          "a": "What is vars_files?"
+          "q": "In this Docker Compose snippet, what key defines a persistent host-to-container mount for configuration files?<pre><code>services:\n  netauto:\n    image: python:3.11\n    ___________:\n      - ./configs:/app/configs</code></pre>",
+          "a": "What is volumes?"
         },
         {
           "q": "In a GitLab CI/CD pipeline, this specific stage is responsible for preparing the environment, such as installing necessary Python libraries or pulling Docker images, before any tests or deployments are executed.",
