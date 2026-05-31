@@ -43,7 +43,7 @@
           "a": "What is the Content-Type header?"
         },
         {
-          "q": "In this Netmiko script, what method should replace the blank to push multiple config lines to a device?<pre><code>config_commands = [\n    'interface GigabitEthernet1',\n    'description WAN-LINK',\n    'no shutdown'\n]\nnet_connect.___________(config_commands)</code></pre>",
+          "q": "You need to apply an ordered list of interface configuration commands in config mode. Which Netmiko method fits this intent?<pre><code>config_commands = [\n    'interface GigabitEthernet1',\n    'description WAN-LINK',\n    'no shutdown'\n]\n# intent: send all config lines as a single config transaction\nnet_connect.___________(config_commands)</code></pre>",
           "a": "What is send_config_set()?"
         },
         {
