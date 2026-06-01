@@ -60,23 +60,23 @@
       "name": "Infrastructure as Code",
       "questions": [
         {
-          "q": "What block is missing to make this a valid Terraform configuration for the Cisco IOS XE provider?<pre><code>terraform {\n  ___________ {\n    iosxe = {\n      source  = \"cisco-devnet/iosxe\"\n      version = \"~> 0.3\"\n    }\n  }\n}</code></pre>",
-          "a": "What is required_providers?"
-        },
-        {
-          "q": "In this Docker Compose snippet, what key defines a persistent host-to-container mount for configuration files?<pre><code>services:\n  netauto:\n    image: python:3.11\n    ___________:\n      - ./configs:/app/configs</code></pre>",
-          "a": "What is volumes?"
-        },
-        {
           "q": "In a GitLab CI/CD pipeline, this specific stage is responsible for preparing the environment, such as installing necessary Python libraries or pulling Docker images, before any tests or deployments are executed.",
           "a": "What is the build stage?"
+        },
+        {
+          "q": "What block is missing to make this a valid Terraform configuration for the Cisco IOS XE provider?<pre><code>terraform {\n  ___________ {\n    iosxe = {\n      source  = \"cisco-devnet/iosxe\"\n      version = \"~> 0.3\"\n    }\n  }\n}</code></pre>",
+          "a": "What is required_providers?"
         },
         {
           "q": "A critical bug fix for a production ACL was accidentally committed to a 'testing' branch that contains many other unfinished features. To move only that specific fix into the 'main' branch without merging the rest of the testing code, you would use this command.",
           "a": "What is git cherry-pick?"
         },
         {
-          "q": "A GitLab CI/CD pipeline fails with an 'Incompatible Version' error for a library like 'Netmiko.' The engineer finds that two different stages are pulling different base Docker images, leading to a conflict in the execution environment. This specific Docker-related strategyis best practice to resolve this .",
+          "q": "In this Docker Compose snippet, what key defines a persistent host-to-container mount for configuration files?<pre><code>services:\n  netauto:\n    image: python:3.11\n    ___________:\n      - ./configs:/app/configs</code></pre>",
+          "a": "What is volumes?"
+        },
+        {
+          "q": "A GitLab CI/CD pipeline fails with an 'Incompatible Version' error for a library like 'Netmiko.' The engineer finds that two different stages are pulling different base Docker images, leading to a conflict in the execution environment. This specific Docker-related strategy is best practice to resolve this.",
           "a": "What is a Custom Docker Image (or a 'Single Source of Image')?"
         }
       ]
