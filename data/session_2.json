@@ -35,12 +35,12 @@
       "name": "Network Automation",
       "questions": [
         {
-          "q": "This JSON-based data modeling language is used to define the structure of data sent over NETCONF or RESTCONF.",
-          "a": "What is YANG?"
+          "q": "A network engineer needs to update only the description field of an existing interface resource without replacing the entire config. Which HTTP method should the RESTCONF request use?.",
+          "a": "What is PATCH?"
         },
         {
-          "q": "What class and required parameters complete this Netmiko connection?<pre><code>from netmiko import ___________\n\nnet_connect = ___________( \n    device_type='cisco_ios',\n    host='10.10.10.1',\n    ___________='admin',\n    ___________='Cisco123'\n)</code></pre>",
-          "a": "What is ConnectHandler, with username and password?"
+          "q": "You need to apply a list of interface configuration commands in config mode and ensure they're all sent as a single transaction. Which Netmiko method fits this scenario?<pre><code>commands = [\n  'interface GigabitEthernet1',\n  'description WAN-LINK',\n  'no shutdown'\n]\nnet_connect.___________( commands )</code></pre>",
+          "a": "What is send_config_set()?"
         },
         {
           "q": "When building this NETCONF payload to configure a VPN from a YANG tree, what operation attribute tells the device to create the VRF only if it doesn't already exist?<pre><code>&lt;config&gt;\n  &lt;native xmlns=\"...native\"&gt;\n    &lt;vrf operation=\"___________\"&gt;\n      &lt;definition&gt;\n        &lt;name&gt;VPN-CORP&lt;/name&gt;\n      &lt;/definition&gt;\n    &lt;/vrf&gt;\n  &lt;/native&gt;\n&lt;/config&gt;</code></pre>",
@@ -127,7 +127,7 @@
         },
         {
           "q": "This is the specific method called at the end of a Python script to actually start the FastMCP server and begin listening for JSON-RPC messages from the host.",
-          "a": "What is @mcp.run()?"
+          "a": "What is mcp.run()?"
         }
       ]
     }
