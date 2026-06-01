@@ -1,32 +1,32 @@
 {
   "finalJeopardy": {
-    "q": "Match each term to its definition",
-    "a": "YANG|PATCH HTTP method|timeout parameter|--diff flag|terraform state mv",
+    "q": "Match each automation scenario to the best command or method",
+    "a": "PATCH|send_config_set()|git revert|pyats diff|mcp.run('stdio')",
     "pairs": [
       {
         "id": 0,
-        "term": "YANG",
-        "def": "Data modeling language for network configuration"
+        "term": "PATCH",
+        "def": "Update only one field of an existing RESTCONF resource without replacing the full object"
       },
       {
         "id": 1,
-        "term": "PATCH HTTP method",
-        "def": "HTTP method used to partially update resources"
+        "term": "send_config_set()",
+        "def": "Push multiple CLI configuration lines in config mode as one operation"
       },
       {
         "id": 2,
-        "term": "timeout parameter",
-        "def": "Specifies maximum wait time for operation"
+        "term": "git revert",
+        "def": "Undo a bad commit in a shared branch by creating a new inverse commit"
       },
       {
         "id": 3,
-        "term": "--diff flag",
-        "def": "Shows differences before applying changes"
+        "term": "pyats diff",
+        "def": "Compare pre-change and post-change snapshots to find operational state differences"
       },
       {
         "id": 4,
-        "term": "terraform state mv",
-        "def": "Terraform command to move state resources"
+        "term": "mcp.run('stdio')",
+        "def": "Start a FastMCP server over standard input/output for host-client communication"
       }
     ]
   },
