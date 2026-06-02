@@ -64,8 +64,8 @@
           "a": "What is the build stage?"
         },
         {
-          "q": "What block is missing to make this a valid Terraform configuration for the Cisco IOS XE provider?<pre><code>terraform {\n  ___________ {\n    iosxe = {\n      source  = \"cisco-devnet/iosxe\"\n      version = \"~> 0.3\"\n    }\n  }\n}</code></pre>",
-          "a": "What is required_providers?"
+          "q": "What block is missing to make this a valid Terraform configuration for the Cisco IOS XE provider?<pre><code>terraform {\n  ___________ {\n    iosxe = {\n      source  = \"cisco-devnet/iosxe\"\n      version = \"~> 0.3\"\n    }\n  }\n}</code></pre>\n\nA) provider_config  B) required_providers  C) terraform_plugins  D) dependencies",
+          "a": "What is B) required_providers?"
         },
         {
           "q": "A critical bug fix for a production ACL was accidentally committed to a 'testing' branch that contains many other unfinished features. To move only that specific fix into the 'main' branch without merging the rest of the testing code, you would use this command.",
