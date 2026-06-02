@@ -1,34 +1,7 @@
 {
   "finalJeopardy": {
-    "q": "Match each automation scenario to the best command or method",
-    "a": "PATCH|send_config_set()|git revert|pyats diff|mcp.run('stdio')",
-    "pairs": [
-      {
-        "id": 0,
-        "term": "PATCH",
-        "def": "Update only one field of an existing RESTCONF resource without replacing the full object"
-      },
-      {
-        "id": 1,
-        "term": "send_config_set()",
-        "def": "Push multiple CLI configuration lines in config mode as one operation"
-      },
-      {
-        "id": 2,
-        "term": "git revert",
-        "def": "Undo a bad commit in a shared branch by creating a new inverse commit"
-      },
-      {
-        "id": 3,
-        "term": "pyats diff",
-        "def": "Compare pre-change and post-change snapshots to find operational state differences"
-      },
-      {
-        "id": 4,
-        "term": "mcp.run('stdio')",
-        "def": "Start a FastMCP server over standard input/output for host-client communication"
-      }
-    ]
+    "q": "Complete these three YANG/RESTCONF elements to configure an interface:<pre><code>POST /restconf/data/___________:native/interface/GigabitEthernet/0/0\n\nContent-Type: ___________\n\n{\n  \"Cisco-IOS-XE-native:native\": {\n    \"interface\": {\n      \"GigabitEthernet\": {\n        \"name\": \"0/0\",\n        \"___________\": \"WAN-LINK\"\n      }\n    }\n  }\n}</code></pre>",
+    "a": "What is: (1) Cisco-IOS-XE-native, (2) application/yang-data+json, (3) description?"
   },
   "categories": [
     {
