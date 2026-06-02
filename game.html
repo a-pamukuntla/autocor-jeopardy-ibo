@@ -980,7 +980,7 @@
         <div id="question-text"></div>
 
         <div id="drag-drop-area">
-            <div class="dd-prompt">🏆 FINAL JEOPARDY — Match each MCP term to its definition</div>
+            <div id="dd-prompt" class="dd-prompt">🏆 FINAL JEOPARDY — Match each term to its definition</div>
             <div class="dd-hint">Players write answers on paper — Host drags terms to reveal correct matches</div>
             <div class="dd-columns">
                 <div>
@@ -1123,7 +1123,7 @@
         try {
             const [, boardRes] = await Promise.all([
                 loadConfig(),
-                fetch(`./data/${board}.json`)
+                fetch(`./data/${board}.json`, { cache: 'no-cache' })
             ]);
             if (!boardRes.ok) throw new Error(`Board fetch failed: ${boardRes.status} ${boardRes.statusText} (./data/${board}.json)`);
             const boardData = await boardRes.json();
@@ -1637,13 +1637,22 @@
 
     function resetDragDrop() { initDragDrop(); }
 
+    function buildFinalMappingsAnswer() {
+        return ddPairs.map(p => `${p.term} -> ${p.def}`).join(' | ');
+    }
+
     function triggerFinal() {
         currentPoints = 500;
         const modal = document.getElementById('modal');
         document.getElementById('question-text').innerHTML = '';
         document.getElementById('drag-drop-area').style.display = 'block';
-        document.getElementById('actual-answer').innerText =
-            '@mcp.tool() → Decorator exposing a tool | FastMCP → MCP server framework | mcp.run(stdio) → starts server over stdio | ConnectHandler() → Netmiko SSH class | if net_connect: → disconnect() guard';
+        const ddPrompt = document.getElementById('dd-prompt');
+        if (ddPrompt) {
+            ddPrompt.textContent = finalJeopardyQuestion
+                ? `🏆 FINAL JEOPARDY — ${finalJeopardyQuestion}`
+                : '🏆 FINAL JEOPARDY — Match each term to its definition';
+        }
+        document.getElementById('actual-answer').innerText = buildFinalMappingsAnswer();
         modal.style.display = 'flex';
         modal.classList.add('opening');
         setTimeout(() => modal.classList.remove('opening'), 700);
