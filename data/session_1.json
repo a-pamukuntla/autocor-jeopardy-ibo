@@ -43,8 +43,8 @@
           "a": "What is the Content-Type header?"
         },
         {
-          "q": "Fill in the blanks to complete this Netmiko script for connection and safe disconnect.<pre><code>from netmiko import ___________\n\nnet_connect = ___________(\n    device_type='cisco_ios',\n    host='10.10.10.1',\n    username='admin',\n    password='Cisco123!'\n)\n\n# ... run commands ...\n\nif ___________:\n    net_connect.disconnect()</code></pre>",
-          "a": "What is ConnectHandler, ConnectHandler, and net_connect?"
+          "q": "To establish an SSH connection to a network device using Netmiko, which class should fill this blank?<pre><code>from netmiko import ConnectHandler\n\nnet_connect = ___________(\n    device_type='cisco_ios',\n    host='10.10.10.1',\n    username='admin',\n    password='Cisco123!'\n)\n\noutput = net_connect.send_command('show version')\nnet_connect.disconnect()</code></pre>\n\nA) SSHConnection()  B) ConnectHandler()  C) DeviceConnect()  D) NetConnect()",
+          "a": "What is B) ConnectHandler()?"
         },
         {
           "q": "When traversing this YANG tree to build a VPN config payload, what YANG module namespace must always prefix your container names?<pre><code>module: Cisco-IOS-XE-native\n  +--rw native\n     +--rw ip\n        +--rw vrf\n           +--rw definition* [name]\n              +--rw name    string\n              +--rw rd?     string</code></pre>",
